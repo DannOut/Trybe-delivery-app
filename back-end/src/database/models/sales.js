@@ -1,9 +1,7 @@
-'use strict';
-import User from './user'
+"use strict";
+import User from "./user";
 
-const {
-  Model
-} = require('sequelize');
+const { Model, NOW } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Sales extends Model {
     /**
@@ -15,24 +13,30 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  Sales.init({
-    user_id: DataTypes.NUMBER,
-    seller_id: DataTypes.NUMBER,
-    total_price: DataTypes.DECIMAL,
-    delivery_adress: DataTypes.STRING,
-    delivery_number: DataTypes.STRING,
-    sale_date: DataTypes.DATE,
-    status: DataTypes.STRING
-  }, {
-    sequelize,
-    modelName: 'Sales',
-    tableName: "sales",
-    underscored: true,
-    timestamps: false,
-  });
+  Sales.init(
+    {
+      user_id: { type: DataTypes.INTEGER, foreignKey: true },
+      seller_id: { type: DataTypes.INTEGER, foreignKey: true },
+      total_price: DataTypes.DECIMAL,
+      delivery_adress: DataTypes.STRING,
+      delivery_number: DataTypes.STRING,
+      sale_date: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
+      },
+      status: DataTypes.STRING,
+    },
+    {
+      sequelize,
+      modelName: "Sales",
+      tableName: "sales",
+      underscored: true,
+      timestamps: false,
+    }
+  );
 
-  Sales.belongsTo(User, { foreignKey: 'userId', as: 'userId' });
-  Sales.belongsTo(User, { foreignKey: 'sellerId', as: 'seller' });
+  Sales.belongsTo(User, { foreignKey: "userId", as: "userId" });
+  Sales.belongsTo(User, { foreignKey: "sellerId", as: "seller" });
 
   return Sales;
 };

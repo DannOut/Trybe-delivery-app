@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
     quantity: DataTypes.INTEGER
   }, {
     sequelize,
-    modelName: 'sales_products',
+    modelName: 'Sales_products',
     tableName: "sales_products",
     underscored: true,
     timestamps: false,

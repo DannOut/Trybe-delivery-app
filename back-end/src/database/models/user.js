@@ -1,4 +1,6 @@
 "use strict";
+import Sales from './sales'
+
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
@@ -31,5 +33,9 @@ module.exports = (sequelize, DataTypes) => {
       timestamps: false,
     }
   );
+
+  User.hasMany(Sales, { foreignKey: 'userId', as: 'userId' });
+  User.hasMany(Sales, { foreignKey: 'sellerId', as: 'seller' });
+
   return User;
 };

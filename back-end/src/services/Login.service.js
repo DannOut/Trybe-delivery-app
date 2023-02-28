@@ -5,7 +5,6 @@ const ErrorClass = require('../utils/ErrorClass');
 
 const login = async (userLogin) => {
     const user = await User.findOne({ where: { email: userLogin.email }, raw: true });
-    console.log('service', user);
     if (!user) throw new ErrorClass(404, 'Email or password are invalid');
     const hashPassword = decodePassword(userLogin.password);
     if (user.password !== hashPassword) throw new ErrorClass(404, 'Email or password are invalid');

@@ -1,12 +1,9 @@
 const ErrorClass = require('../utils/ErrorClass');
 
 const validateLogin = (req, _res, next) => {
-  try {
     const { email, password } = req.body;
-    if (!email || !password) throw new ErrorClass(404, '');
-  } catch (e) {
-  next(e);
-  }
+    if (!email || !password) throw new ErrorClass(404, 'email or password required');
+  next();
 };
 
 module.exports = validateLogin;

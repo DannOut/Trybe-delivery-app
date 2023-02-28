@@ -6,6 +6,7 @@ const router = Router();
 
 router.post(
   '/',
+  // validateLogin,
   loginController, 
 );
 

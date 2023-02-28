@@ -1,9 +1,8 @@
 "use strict";
-const User = (sequelize, DataTypes) => {
-  const userTable = sequelize.define('User', {
+module.exports = (sequelize, DataTypes) => {
+  const User = sequelize.define('User', {
     id: { 
       type: DataTypes.INTEGER,
-      allowNull: false,
       primaryKey: true,
       autoIncrement: true
     },
@@ -11,17 +10,12 @@ const User = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    email: {
-      type:DataTypes.STRING,
-      allowNull: false
-    },
-    password: {
-      type:DataTypes.STRING,
-      allowNull: false
-    },
-    role: {
-      type: DataTypes.STRING,
-      allowNull: false,
+    {
+      sequelize,
+      modelName: "User",
+      tableName: "users",
+      underscored: true,
+      timestamps: false,
     }
   },
   {
@@ -30,8 +24,8 @@ const User = (sequelize, DataTypes) => {
     modelName: 'User',
   });
 
-  userTable.associate = (models) => {
-    userTable.hasMany(models.Sale,
+  User.associate = (models) => {
+    User.hasMany(models.Sale,
       { foreignKey: 'userId', as: 'user' },
       { foreignKey: 'sellerId', as: 'seller' },
     );
@@ -39,5 +33,3 @@ const User = (sequelize, DataTypes) => {
 
   return userTable;
 };
-
-module.exports = User;

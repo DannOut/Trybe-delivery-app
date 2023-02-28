@@ -1,5 +1,5 @@
 "use strict";
-import Sales from './sales'
+const Sales = require('./sales');
 
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {

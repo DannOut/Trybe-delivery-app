@@ -1,7 +1,7 @@
 'use strict';
 
-import Products from './products';
-import Sales from './sales';
+const Products = require('./products');
+const Sales = require('./sales');
 
 const {
   Model

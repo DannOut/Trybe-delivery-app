@@ -1,9 +1,9 @@
 "use strict";
-import User from "./user";
+const User = require("./user");
 
 const { Model, NOW } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class Sales extends Model {
+  class Sale extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  Sales.init(
+  Sale.init(
     {
       user_id: { type: DataTypes.INTEGER, foreignKey: true },
       seller_id: { type: DataTypes.INTEGER, foreignKey: true },
@@ -35,8 +35,8 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  Sales.belongsTo(User, { foreignKey: "userId", as: "userId" });
-  Sales.belongsTo(User, { foreignKey: "sellerId", as: "seller" });
+  Sale.belongsTo(User, { foreignKey: "userId", as: "user" });
+  Sale.belongsTo(User, { foreignKey: "sellerId", as: "seller" });
 
-  return Sales;
+  return Sale;
 };

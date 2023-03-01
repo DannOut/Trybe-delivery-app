@@ -1,8 +1,10 @@
 const express = require('express');
+const cors = require('cors');
 const errorHandler = require('../middlewares/ErrorHandler');
 const { loginRouter, registerRouter, productsRouter } = require('../routes');
 
 const app = express();
+app.use(cors());
 
 app.use(express.json());
 

@@ -8,9 +8,9 @@ const login = async (userLogin) => {
     if (!user) throw new ErrorClass(404, 'Email or password are invalid');
     const hashPassword = decodePassword(userLogin.password);
     if (user.password !== hashPassword) throw new ErrorClass(404, 'Email or password are invalid');
-    const { password, ...userWithoutPassword } = user;
+    const { password, id, ...userWithoutPassword } = user;
     const token = createToken(userWithoutPassword);
-    return token;
+    return { token, ...userWithoutPassword };
   };
 
 module.exports = login;

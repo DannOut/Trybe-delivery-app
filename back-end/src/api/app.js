@@ -1,8 +1,10 @@
 const express = require('express');
 const errorHandler = require('../middlewares/ErrorHandler');
 const { loginRouter } = require('../routes');
+const cors = require('cors');
 
 const app = express();
+app.use(cors());
 
 app.use(express.json());
 

@@ -1,18 +1,18 @@
 const { Router } = require('express');
 const { productsController } = require('../controllers');
-const validateToken = require('../middlewares/validateToken');
+const { verifyToken } = require('../auth/jwtFunctions');
 
 const router = Router();
 
 router.get(
   '/',
-  validateToken,
+  verifyToken,
   productsController.getAllProducts,
 );
 
 router.get(
   '/:id',
-  validateToken,
+  verifyToken,
   productsController.getProductById,
 );
 

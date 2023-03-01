@@ -9,7 +9,7 @@ const register = async (newUser) => {
     const hashPassword = decodePassword(newUser.password);
     const userCreated = await User
     .create({ ...newUser, password: hashPassword, role: 'customer' });
-    const { password, ...userWithoutPassword } = userCreated.dataValues;
+    const { password, id, ...userWithoutPassword } = userCreated.dataValues;
     const token = createToken(userWithoutPassword);
     return { token, ...userWithoutPassword };
   };

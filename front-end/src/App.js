@@ -10,7 +10,7 @@ import Products from './Pages/Customer.products';
 function App() {
   return (
     <Switch>
-      <Route>
+      <Route exact path="/customer/products">
         <Products />
       </Route>
       <Route exact path="/login">

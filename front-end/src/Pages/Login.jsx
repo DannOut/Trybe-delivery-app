@@ -34,13 +34,13 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const result = await axios.post(baseURL, ({
-      email: form.email, password: form.password, role: form.role,
+      email: form.email, password: form.password,
     }))
       .then((response) => response).catch(({ response }) => response);
-
     if (result.status !== NOTFOUND) {
-      localStorage.setItem('user', JSON.stringify(result));
+      localStorage.setItem('user', JSON.stringify(result.data));
       history.push('/customer/products');
+      setForm();
     } else {
       setMessage('Invalid email or password');
     }

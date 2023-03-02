@@ -1,10 +1,10 @@
-import axios from 'axios';
-import React, { useEffect } from 'react';
+// import axios from 'axios';
+import React /* { useEffect } */ from 'react';
 import Navbar from '../components/Navbar';
 
 export default function Products() {
   const [products, setProducts] = useState([]);
-  const baseURLProducts = 'localhost:3001/products';
+  const baseURLProducts = 'http://localhost:3001/products';
 
   useEffect(() => {
     const axiosProductsRequest = async () => {
@@ -15,8 +15,8 @@ export default function Products() {
       setProducts(result);
     };
     axiosProductsRequest();
-  });
-  console.log(products);
+    console.log('products :>> ', products);
+  }, []);
   return (
     <div>
       <Navbar />

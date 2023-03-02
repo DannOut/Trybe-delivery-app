@@ -6,6 +6,7 @@ import {
   Login,
   Products,
   RedirectToLogin,
+  Register,
 } from './Pages';
 
 function App() {

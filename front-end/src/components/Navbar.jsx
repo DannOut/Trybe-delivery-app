@@ -12,9 +12,12 @@ export default function navbar() {
       <div data-testid="customer_products__element-navbar-user-full-name">
         Link user-full-name
       </div>
-      <div data-testid="customer_products__element-navbar-link-logout">
+      <button
+        type="button"
+        data-testid="customer_products__element-navbar-link-logout"
+      >
         link-logout
-      </div>
+      </button>
     </nav>
   );
 }

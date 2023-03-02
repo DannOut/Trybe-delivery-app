@@ -22,7 +22,6 @@ export default function Products() {
     };
     axiosProductsRequest();
   }, []);
-
   return (
     <div>
       <Navbar />

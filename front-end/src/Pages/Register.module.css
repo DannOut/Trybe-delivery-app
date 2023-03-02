@@ -1,0 +1,23 @@
+
+.registerContent{
+  align-items: center;
+  background-color: #C72828;
+  color: #FFB84D;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  justify-content: center;
+}
+
+.registerContent form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.registerContent form input{
+  border: none;
+  border-radius: 4px;
+  padding: 0.875rem;
+  width: 15rem;
+}

@@ -6,6 +6,7 @@ import './App.css';
 import Login from './Pages/Login';
 import RedirectToLogin from './Pages/RedirectToLogin';
 import Products from './Pages/Customer.products';
+import Register from './Pages/Register';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
           <RedirectToLogin />
         </div>
       </Route>
+      <Route exact path="/register" component={ Register } />
     </Switch>
   );
 }

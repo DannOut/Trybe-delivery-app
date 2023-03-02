@@ -1,8 +1,7 @@
-
-.registerContent{
+.registerContent {
   align-items: center;
-  background-color: #C72828;
-  color: #FFB84D;
+  background-color: #c72828;
+  color: #ffb84d  ;
   display: flex;
   flex-direction: column;
   height: 100vh;
@@ -15,7 +14,7 @@
   gap: 0.75rem;
 }
 
-.registerContent form input{
+.registerContent form input {
   border: none;
   border-radius: 4px;
   padding: 0.875rem;

@@ -9,7 +9,6 @@ import Products from './Pages/Customer.products';
 import Register from './Pages/Register';
 import CheckoutPage from './Pages/CheckoutClient';
 
-
 function App() {
   return (
     <Switch>

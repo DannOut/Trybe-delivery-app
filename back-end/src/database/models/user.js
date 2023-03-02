@@ -1,7 +1,7 @@
 "use strict";
 const User = (sequelize, DataTypes) => {
   const userTable = sequelize.define('User', {
-    id: { 
+    id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,

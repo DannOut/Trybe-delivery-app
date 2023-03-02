@@ -40,7 +40,10 @@ export default function Login() {
     if (result.status !== NOTFOUND) {
       localStorage.setItem('user', JSON.stringify(result.data));
       history.push('/customer/products');
-      setForm();
+      setForm({
+        ...form,
+        password: '',
+      });
     } else {
       setMessage('Invalid email or password');
     }

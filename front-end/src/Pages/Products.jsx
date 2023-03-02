@@ -1,5 +1,5 @@
-// import axios from 'axios';
-import React /* { useEffect } */ from 'react';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
 
 export default function Products() {
@@ -8,15 +8,21 @@ export default function Products() {
 
   useEffect(() => {
     const axiosProductsRequest = async () => {
+      const { token } = JSON.parse(localStorage.getItem('user')) || '';
       const result = await axios
-        .get(baseURLProducts)
+        .get(baseURLProducts, {
+          headers: {
+            Authorization: token,
+          },
+        })
         .then((response) => response)
         .catch((response) => response);
-      setProducts(result);
+      setProducts(result.data);
     };
     axiosProductsRequest();
-    console.log('products :>> ', products);
   }, []);
+
+  console.log('products :>> ', products);
   return (
     <div>
       <Navbar />

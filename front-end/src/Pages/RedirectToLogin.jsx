@@ -6,7 +6,7 @@ export default function Redirect() {
 
   useEffect(() => {
     history.push('/login');
-  }, []);
+  }, [history]);
 
   return (
     <div>Redirect</div>

@@ -6,11 +6,13 @@ import './App.css';
 import Login from './Pages/Login';
 import RedirectToLogin from './Pages/RedirectToLogin';
 import Products from './Pages/Customer.products';
+import CheckoutPage from './Pages/CheckoutClient';
 
 function App() {
   return (
     <Switch>
       <Route exact path="/customer/products" element={ <Products /> } />
+      <Route exact path="/checkout" element={ <CheckoutPage /> } />
       <Route exact path="/login">
         <div className="App">
           <img src={ Logo } alt="Your SVG" />

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
+import ProductsCard from '../components/ProductsCard';
 
 export default function Products() {
   const [products, setProducts] = useState([]);
@@ -22,12 +23,19 @@ export default function Products() {
     axiosProductsRequest();
   }, []);
 
-  console.log('products :>> ', products);
   return (
     <div>
       <Navbar />
       <div>
-        futuramente aqui vai ser o card de cada produto
+        {products.map(({ id, name, price, urlImage }) => (
+          <ProductsCard
+            key={ id }
+            id={ id }
+            urlImage={ urlImage }
+            name={ name }
+            price={ price.replace('.', ',') }
+          />
+        ))}
       </div>
     </div>
   );

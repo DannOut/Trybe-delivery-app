@@ -8,7 +8,10 @@ export default function Products() {
 
   useEffect(() => {
     const axiosProductsRequest = async () => {
-      const result = await axios.get(baseURLProducts);
+      const result = await axios
+        .get(baseURLProducts)
+        .then((response) => response)
+        .catch((response) => response);
       setProducts(result);
     };
     axiosProductsRequest();

@@ -1,17 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
+import Context from '../context/Context';
 
 export default function Login() {
-  const [form, setForm] = useState({
-    email: '',
-    password: '',
-  });
-  const [message, setMessage] = useState('');
+  const {
+    form,
+    setForm,
+    message,
+    setMessage,
+  } = useContext(Context);
+  const [disabled, setDisabled] = useState(true);
 
   const history = useHistory();
-  const [disabled, setDisabled] = useState(true);
   const baseURL = 'http://localhost:3001/login';
+  const NOTFOUND = 404;
 
   useEffect(() => {
     const validateEmail = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/gi;
@@ -30,18 +33,16 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const result = await axios.post(baseURL, {
-      email: form.email, password: form.password,
-    })
+    const result = await axios.post(baseURL, ({
+      email: form.email, password: form.password, role: form.role,
+    }))
       .then((response) => response).catch(({ response }) => response);
-    const NOTFOUND = 404;
 
-    console.log(result.status);
-
-    if (result.status === NOTFOUND) {
-      setMessage('Invalid email or password');
-    } else {
+    if (result.status !== NOTFOUND) {
+      localStorage.setItem('user', JSON.stringify(result));
       history.push('/customer/products');
+    } else {
+      setMessage('Invalid email or password');
     }
   };
 

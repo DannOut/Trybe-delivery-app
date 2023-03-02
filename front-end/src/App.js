@@ -4,15 +4,13 @@ import Logo from './images/Logo.svg';
 import './App.css';
 
 import Login from './Pages/Login';
-import Redirect from './Pages/RedirectToLogin';
+import RedirectToLogin from './Pages/RedirectToLogin';
 import Products from './Pages/Customer.products';
 
 function App() {
   return (
     <Switch>
-      <Route exact path="/customer/products">
-        <Products />
-      </Route>
+      <Route exact path="/customer/products" element={ <Products /> } />
       <Route exact path="/login">
         <div className="App">
           <img src={ Logo } alt="Your SVG" />
@@ -22,7 +20,7 @@ function App() {
       <Route exact path="/">
         <div className="App">
           <img src={ Logo } alt="Your SVG" />
-          <Redirect />
+          <RedirectToLogin />
         </div>
       </Route>
     </Switch>

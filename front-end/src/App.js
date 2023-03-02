@@ -5,7 +5,7 @@ import './App.css';
 
 import Login from './Pages/Login';
 import RedirectToLogin from './Pages/RedirectToLogin';
-import Products from './Pages/Customer.products';
+import Products from './Pages/Products';
 
 function App() {
   return (

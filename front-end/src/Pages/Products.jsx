@@ -1,0 +1,25 @@
+import axios from 'axios';
+import React, { useEffect } from 'react';
+import Navbar from '../components/Navbar';
+
+export default function Products() {
+  const [products, setProducts] = useState([]);
+  const baseURLProducts = 'localhost:3001/products';
+
+  useEffect(() => {
+    const axiosProductsRequest = async () => {
+      const result = await axios.get(baseURLProducts);
+      setProducts(result);
+    };
+    axiosProductsRequest();
+  });
+  console.log(products);
+  return (
+    <div>
+      <Navbar />
+      <div>
+        futuramente aqui vai ser o card de cada produto
+      </div>
+    </div>
+  );
+}

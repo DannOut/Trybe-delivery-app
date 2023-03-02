@@ -3,7 +3,11 @@ import PropTypes from 'prop-types';
 import Context from './Context';
 
 function Provider({ children }) {
-  return <Context.Provider>{children}</Context.Provider>;
+  const value = React.useMemo(() => ({
+    teste: 'a',
+    teste2: 'b',
+  }), []);
+  return <Context.Provider value={ value }>{children}</Context.Provider>;
 }
 
 Provider.propTypes = {

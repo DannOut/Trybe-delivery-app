@@ -34,6 +34,7 @@ const Sale = sequelize.define('Sale', {
   status: {
     type: DataTypes.STRING, 
     allowNull: false,
+    defaultValue: 'Pendente'
   }
 },
   {

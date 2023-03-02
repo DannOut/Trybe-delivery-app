@@ -5,7 +5,7 @@ const ErrorClass = require('../utils/ErrorClass');
 
 const register = async (newUser) => {
   const checkIfExists = await User.findOne({ where: { email: newUser.email }, raw: true });
-    if (checkIfExists) throw new ErrorClass(404, 'User already exists');
+    if (checkIfExists) throw new ErrorClass(409, 'User already exists');
     const hashPassword = decodePassword(newUser.password);
     const userCreated = await User
     .create({ ...newUser, password: hashPassword, role: 'customer' });

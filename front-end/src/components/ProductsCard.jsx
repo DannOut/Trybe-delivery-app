@@ -3,7 +3,6 @@ import { string, number } from 'prop-types';
 
 //  prettier-ignore
 function ProductsCard({ id, name, urlImage, price }) {
-  console.log('urlImage :>> ', urlImage);
   return (
     <section data-testid="products">
       <p data-testid={ `customer_products__element-card-price-${id}` }>

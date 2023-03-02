@@ -5,10 +5,14 @@ import './App.css';
 
 import Login from './Pages/Login';
 import Redirect from './Pages/RedirectToLogin';
+import Products from './Pages/Customer.products';
 
 function App() {
   return (
     <Switch>
+      <Route>
+        <Products />
+      </Route>
       <Route exact path="/login">
         <div className="App">
           <img src={ Logo } alt="Your SVG" />

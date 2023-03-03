@@ -30,7 +30,7 @@ export default function Products() {
 
   const getTotalOrderValue = () => {
     const total = order
-      .reduce((acc, curr) => acc + parseFloat(curr.price.replace(',', '.')), 0);
+      .reduce((acc, curr) => acc + parseFloat(curr.price), 0);
     setTotalPrice(total.toFixed(2).replace('.', ','));
   };
   getTotalOrderValue();
@@ -58,7 +58,7 @@ export default function Products() {
             id={ id }
             urlImage={ urlImage }
             name={ name }
-            price={ price.replace('.', ',') }
+            price={ price }
             quantity={ 0 }
           />
         ))}

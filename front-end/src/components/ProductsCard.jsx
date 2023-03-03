@@ -4,7 +4,7 @@ import Context from '../context/Context';
 
 //  prettier-ignore
 function ProductsCard({ id, name, urlImage, price }) {
-  const { order, setOrder, setTotalQuantity } = useContext(Context);
+  const { order, setOrder } = useContext(Context);
 
   // quantity for each item
   const [quantity, setQuantity] = useState(0);
@@ -14,26 +14,25 @@ function ProductsCard({ id, name, urlImage, price }) {
       (orderByProduct) => orderByProduct.id === id,
     ).length;
     setQuantity(quantityByProduct);
-    setTotalQuantity(order.length);
   }, [order, id]);
 
   const addOrder = ({ target: { value } }) => {
     setQuantity(value);
-    const productNotInOrders = order.filter((orderId) => orderId !== id);
+    const productsWithDifferentId = order.filter((orderId) => orderId !== id);
     const newProduct = [];
     for (let i = 1; i <= value; i += 1) {
       newProduct.push({ id, name, urlImage, price });
     }
-    setOrder([...productNotInOrders, ...newProduct]);
+    setOrder([...productsWithDifferentId, ...newProduct]);
   };
 
   const removeOrder = (productId) => {
-    const withTheProduct = order
+    const productsWithSameId = order
       .filter((orderByProduct) => orderByProduct.id === productId);
-    withTheProduct.pop();
-    const withoutProduct = order
+    productsWithSameId.pop();
+    const productsWithDifferentId = order
       .filter((orderByProduct) => orderByProduct.id !== productId);
-    setOrder([...withoutProduct, ...withTheProduct]);
+    setOrder([...productsWithDifferentId, ...productsWithSameId]);
   };
 
   return (

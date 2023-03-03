@@ -12,7 +12,6 @@ function Provider({ children }) {
   const [message, setMessage] = useState('');
 
   const [order, setOrder] = useState([]);
-  const [totalQuantity, setTotalQuantity] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
 
   const value = React.useMemo(
@@ -23,8 +22,6 @@ function Provider({ children }) {
       setMessage,
       order,
       setOrder,
-      totalQuantity,
-      setTotalQuantity,
       totalPrice,
       setTotalPrice,
     }),
@@ -35,8 +32,6 @@ function Provider({ children }) {
       setMessage,
       order,
       setOrder,
-      totalQuantity,
-      setTotalQuantity,
       totalPrice,
       setTotalPrice,
     ],

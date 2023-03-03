@@ -48,10 +48,12 @@ const Sale = sequelize.define('Sale', {
     Sale.belongsTo(models.User, {
       foreignKey: 'userId', as: 'user'
     });
-
-    Sale.belongsTo(models.User, {
+  Sale.belongsTo(models.User, {
       foreignKey: 'sellerId', as: 'seller'
     });
+  Sale.hasMany(models.SaleProduct, {
+      foreignKey: 'saleId', as: 'sale'
+    })
   }
 
   return Sale;

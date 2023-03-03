@@ -1,16 +1,20 @@
-const { Sale, Product, SaleProduct } = require('../database/models');
+const { Sale, Product, SaleProduct, User } = require('../database/models');
 const ErrorClass = require('../utils/ErrorClass');
 const { decodeToken } = require('../auth/jwtFunctions');
+const validateChange = require('../validations/validateChangeStatus');
 
-const getAllSales = async (id, token) => {
-  const { role } = decodeToken(token);
+const getAllSales = async (token) => {
+  const { role, email } = decodeToken(token);
+  const user = await User.findOne({ where: { email }, raw: true });
+  if (!user) throw new ErrorClass(401, 'email not found');
   const roleFound = role === 'customer' ? 'userId' : 'sellerId';
-  const sales = await Sale.findAll({ where: { [roleFound]: id }, raw: true });
+  const sales = await Sale.findAll({ where: { [roleFound]: user.id }, raw: true });
   if (!sales) throw new ErrorClass(404, 'Sales not found!');
-  return sales;
+  const { password, id, ...userWithoutPassword } = user;
+  return { sales, user: { ...userWithoutPassword } };
 };
 
-const getSalesById = async (id, token) => {
+const getSaleById = async (id, token) => {
   const { role } = decodeToken(token);
   if (role === 'customer') throw new ErrorClass(401, 'Acess unauthorized');
   const checkSale = await Sale.findByPk(id);
@@ -25,10 +29,20 @@ const getSalesById = async (id, token) => {
         attributes: ['id', 'name', 'price', 'urlImage'],
       }],
   });
-  return { products, totalPrice: checkSale.totalPrice };
+  const { totalPrice, sellerId, saleDate, status } = checkSale;
+  return { products, totalPrice, sellerId, saleDate, status, id: checkSale.id };
+};
+
+const changeStatus = async (id, token, newStatus) => {
+  const { role, email } = decodeToken(token);
+  const user = await User.findOne({ where: { email, role }, raw: true });
+  if (!user) throw new ErrorClass(401, 'User not found');
+  validateChange(role, newStatus);
+  await Sale.update({ status: newStatus }, { where: { id } });
 };
 
 module.exports = {
   getAllSales,
-  getSalesById,
+  getSaleById,
+  changeStatus,
 };

@@ -7,6 +7,7 @@ import {
   Products,
   RedirectToLogin,
   Register,
+  CheckoutClient,
 } from './Pages';
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
         </div>
       </Route>
       <Route exact path="/register" component={ Register } />
+      <Route exact path="/checkout" component={ CheckoutClient } />
     </Switch>
   );
 }

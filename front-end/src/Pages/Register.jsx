@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import api from '../Service/api';
-import styles from './Register.module.css';
+import styles from '../css/Register.module.css';
 import Logo from '../images/Logo.svg';
 
 export default function Register() {

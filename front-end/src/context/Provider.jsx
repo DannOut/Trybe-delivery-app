@@ -11,9 +11,36 @@ function Provider({ children }) {
   });
   const [message, setMessage] = useState('');
 
-  const value = React.useMemo(() => ({
-    form, setForm, message, setMessage,
-  }), [form, setForm, message, setMessage]);
+  const [order, setOrder] = useState([]);
+  const [totalQuantity, setTotalQuantity] = useState(0);
+  const [totalPrice, setTotalPrice] = useState(0);
+
+  const value = React.useMemo(
+    () => ({
+      form,
+      setForm,
+      message,
+      setMessage,
+      order,
+      setOrder,
+      totalQuantity,
+      setTotalQuantity,
+      totalPrice,
+      setTotalPrice,
+    }),
+    [
+      form,
+      setForm,
+      message,
+      setMessage,
+      order,
+      setOrder,
+      totalQuantity,
+      setTotalQuantity,
+      totalPrice,
+      setTotalPrice,
+    ],
+  );
   return <Context.Provider value={ value }>{children}</Context.Provider>;
 }
 

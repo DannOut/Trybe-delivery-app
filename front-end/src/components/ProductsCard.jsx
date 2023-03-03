@@ -1,8 +1,41 @@
-import React from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { string, number } from 'prop-types';
+import Context from '../context/Context';
 
 //  prettier-ignore
 function ProductsCard({ id, name, urlImage, price }) {
+  const { order, setOrder, setTotalQuantity } = useContext(Context);
+
+  // quantity for each item
+  const [quantity, setQuantity] = useState(0);
+
+  useEffect(() => {
+    const quantityByProduct = order.filter(
+      (orderByProduct) => orderByProduct.id === id,
+    ).length;
+    setQuantity(quantityByProduct);
+    setTotalQuantity(order.length);
+  }, [order, id]);
+
+  const addOrder = ({ target: { value } }) => {
+    setQuantity(value);
+    const productNotInOrders = order.filter((orderId) => orderId !== id);
+    const newProduct = [];
+    for (let i = 1; i <= value; i += 1) {
+      newProduct.push({ id, name, urlImage, price });
+    }
+    setOrder([...productNotInOrders, ...newProduct]);
+  };
+
+  const removeOrder = (productId) => {
+    const withTheProduct = order
+      .filter((orderByProduct) => orderByProduct.id === productId);
+    withTheProduct.pop();
+    const withoutProduct = order
+      .filter((orderByProduct) => orderByProduct.id !== productId);
+    setOrder([...withoutProduct, ...withTheProduct]);
+  };
+
   return (
     <section data-testid="products">
       <p data-testid={ `customer_products__element-card-price-${id}` }>
@@ -21,21 +54,23 @@ function ProductsCard({ id, name, urlImage, price }) {
           data-testid={ `customer_products__button-card-rm-item-${id}` }
           type="button"
           name="decreaseButton"
-          onClick={ (e) => onClick(e) }
+          onClick={ () => removeOrder(id) }
         >
           -
         </button>
         <input
-          type="text"
+          type="number"
           data-testid={ `customer_products__input-card-quantity-${id}` }
           name="quantity"
-          value={ 0 }
+          onChange={ (e) => addOrder(e) }
+          value={ quantity }
         />
         <button
           data-testid={ `customer_products__button-card-add-item-${id}` }
           type="button"
           name="increaseButton"
-          onClick={ (e) => onClick(e) }
+          onClick={ () => setOrder([...order,
+            { id, name, urlImage, price }]) }
         >
           +
         </button>

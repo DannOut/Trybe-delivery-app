@@ -28,12 +28,12 @@ export default function Products() {
     axiosProductsRequest();
   }, []);
 
-  //  get Total
-  useEffect(() => {
+  const getTotalOrderValue = () => {
     const total = order
       .reduce((acc, curr) => acc + parseFloat(curr.price.replace(',', '.')), 0);
     setTotalPrice(total.toFixed(2).replace('.', ','));
-  });
+  };
+  getTotalOrderValue();
 
   return (
     <div>

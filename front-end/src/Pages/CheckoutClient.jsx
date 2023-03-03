@@ -50,7 +50,6 @@ export default function CheckoutClient() {
                 data-testid="customer_checkout__select-seller"
               >
                 Fulana Pereira
-
               </option>
             </select>
           </label>

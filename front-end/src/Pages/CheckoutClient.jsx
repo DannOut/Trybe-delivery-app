@@ -41,18 +41,18 @@ export default function CheckoutClient() {
       <div>
         <p data-testid="customer_checkout__element-order-total-price">Total: R$ 28,46</p>
         <span>Detalhes e Endereço de Entrega</span>
+        <label htmlFor="seller">
+          Vendedora Responsável
+          <select id="estado" name="estado">
+            <option
+              value="Fulana Pereira"
+              data-testid="customer_checkout__select-seller"
+            >
+              Fulana Pereira
+            </option>
+          </select>
+        </label>
         <form>
-          <label htmlFor="seller">
-            Vendedora Responsável
-            <select id="estado" name="estado">
-              <option
-                value="Fulana Pereira"
-                data-testid="customer_checkout__select-seller"
-              >
-                Fulana Pereira
-              </option>
-            </select>
-          </label>
           <label htmlFor="endereco">
             Endereço
             <input

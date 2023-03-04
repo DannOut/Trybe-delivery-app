@@ -1,19 +1,29 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import api from '../Service/api';
 // import { useHistory } from 'react-router-dom';
-import CheckoutProductsCard from '../components/CheckoutProductsCard';
+// import CheckoutProductsCard from '../components/CheckoutProductsCard';
 import Navbar from '../components/Navbar';
 
 export default function CustomerOrders() {
+  const [data, setData] = useState('');
   useEffect(() => {
-    const { token } = JSON.parse(localStorage.getItem('user')) || '';
-    api.get('/register',)
-  });
+    // declare the data fetching function
+    const getSales = async () => {
+      const { token } = JSON.parse(localStorage.getItem('user')) || '';
+      await api.get('/sales', {
+        headers: { Authorization: token },
+      });
+    };
+
+    // call the function
+    setData(getSales());
+    // make sure to catch any error
+  }, []);
 
   return (
     <div>
       <Navbar />
-      {/* linha com dados do pedido */}
+      {/* linha co dados do pedido */}
       <div>
         <span>Pedido</span>
         <span>Nome</span>
@@ -21,7 +31,8 @@ export default function CustomerOrders() {
         <span>Status</span>
         <button type="button">Status de entrega</button>
       </div>
-      {/* <CheckoutProductsCard /> */}
+      {data..map(({ id, price, urlImage }) => (
+        <CheckoutProductsCard />}
       <div>
         <p data-testid="customer_checkout__element-order-total-price">Total: R$ 28,46</p>
         <span>Detalhes do Pedido</span>

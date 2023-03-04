@@ -8,16 +8,17 @@ export default function CustomerOrders() {
   const [data, setData] = useState('');
   useEffect(() => {
     // declare the data fetching function
-    const getSales = async () => {
-      const { token } = JSON.parse(localStorage.getItem('user')) || '';
-      await api.get('/sales', {
-        headers: { Authorization: token },
-      });
-    };
 
-    // call the function
-    setData(getSales());
-    // make sure to catch any error
+    const { token } = JSON.parse(localStorage.getItem('user')) || '';
+    api.get('/sales', {
+      headers: { Authorization: token },
+    }).then((response) => {
+      setData(response);
+      console.log(response.data);
+    })
+      .catch((erro) => {
+        console.log(erro);
+      });
   }, []);
 
   return (
@@ -31,8 +32,8 @@ export default function CustomerOrders() {
         <span>Status</span>
         <button type="button">Status de entrega</button>
       </div>
-      {data..map(({ id, price, urlImage }) => (
-        <CheckoutProductsCard />}
+      {/* {data..map(({ id, price, urlImage }) => (
+        <CheckoutProductsCard />} */}
       <div>
         <p data-testid="customer_checkout__element-order-total-price">Total: R$ 28,46</p>
         <span>Detalhes do Pedido</span>

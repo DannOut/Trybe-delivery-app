@@ -1,43 +1,61 @@
 import React, { useContext, useState, useEffect } from 'react';
-// import axios from 'axios';
+import { useHistory } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Context from '../context/Context';
 
 export default function CheckoutClient() {
-  const { totalPrice, order } = useContext(Context);
+  const { order } = useContext(Context);
   const [showOrder, setShowOrder] = useState([]);
+  const [totalPrice, setTotalPrice] = useState(0);
+  const history = useHistory();
+
+  const handleRemoveItem = (itemId) => {
+    const updatedOrder = showOrder.filter((item) => item.id !== itemId);
+    let totalValue = 0;
+    updatedOrder.forEach(({ price, quantity }) => {
+      totalValue += parseFloat(price) * quantity;
+    });
+    setTotalPrice(totalValue.toFixed(2).replace('.', ','));
+    setShowOrder(updatedOrder);
+    console.log(updatedOrder);
+  };
 
   useEffect(() => {
-    const novoObjeto = {};
+    const newArray = [];
+    let totalValue = 0;
+
     order.forEach(({ id, price, name }) => {
-      if (!novoObjeto[id]) {
-        novoObjeto[id] = {
+      const index = newArray.findIndex((obj) => obj.id === id);
+      const negativeIndex = -1;
+      if (index === negativeIndex) {
+        const newObj = {
           id,
-          price,
+          price: parseFloat(price),
           name,
-          totalValue: price,
-          quantity: 0,
+          quantity: 1,
         };
+        newObj.totalValue = parseFloat(Math
+          .floor(newObj.price * newObj.quantity * 100) / 100)
+          .toFixed(2).replace('.', ',');
+        newArray.push(newObj);
+        totalValue += newObj.price;
+      } else {
+        newArray[index].quantity += 1;
+        newArray[index].totalValue = parseFloat(Math
+          .floor(newArray[index].price * newArray[index].quantity * 100) / 100)
+          .toFixed(2).replace('.', ',');
+        totalValue += newArray[index].price;
       }
-
-      novoObjeto[id].price = parseFloat(price);
-      novoObjeto[id].totalValue += parseFloat(price);
-      novoObjeto[id].quantity += 1;
     });
-    const novoArray = Object.values(novoObjeto).map((obj) => {
-      const price = parseFloat(obj.price).toFixed(2).replace('.', ',');
-      const totalValue = (
-        parseFloat(obj.totalValue) * obj.quantity
-      ).toFixed(2).replace('.', ',');
 
-      return {
-        ...obj,
-        price,
-        totalValue,
-      };
-    });
-    setShowOrder(novoArray);
+    setShowOrder(newArray);
+    setTotalPrice(totalValue.toFixed(2).replace('.', ','));
   }, [order]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    history.pushState('/');
+  };
 
   return (
     <div>
@@ -50,12 +68,16 @@ export default function CheckoutClient() {
         <span>Valor unitário</span>
         <span>Sub-total</span>
         <span>Remover Item</span>
+      </div>
+      <div>
         {showOrder.map((item, i) => (
           <div key={ i }>
             <span
-              data-testid={ `customer_checkout__element-order-table-item-number-${i}` }
+              data-testid={
+                `customer_checkout__element-order-table-item-number-${i}`
+              }
             >
-              {i}
+              {i + 1}
             </span>
             <p
               data-testid={ `customer_checkout__element-order-table-name-${i}` }
@@ -72,7 +94,7 @@ export default function CheckoutClient() {
             <p
               data-testid={ `customer_checkout__element-order-table-unit-price-${i}` }
             >
-              {item.price}
+              {parseFloat(item.price).toFixed(2).replace('.', ',')}
 
             </p>
             <p
@@ -84,6 +106,7 @@ export default function CheckoutClient() {
             <button
               type="button"
               data-testid={ `customer_checkout__element-order-table-remove-${i}` }
+              onClick={ () => handleRemoveItem(item.id) }
             >
               Remover
 
@@ -100,11 +123,12 @@ export default function CheckoutClient() {
         <span>Detalhes e Endereço de Entrega</span>
         <label htmlFor="seller">
           Vendedora Responsável
-          <select id="estado" name="estado">
-            <option
-              value="Fulana Pereira"
-              data-testid="customer_checkout__select-seller"
-            >
+          <select
+            id="estado"
+            name="estado"
+            data-testid="customer_checkout__select-seller"
+          >
+            <option value="Fulana Pereira">
               Fulana Pereira
             </option>
           </select>
@@ -129,6 +153,7 @@ export default function CheckoutClient() {
           <button
             data-testid="customer_checkout__button-submit-order"
             type="submit"
+            onSubmit={ () => handleSubmit(e) }
           >
             Finalizar
           </button>

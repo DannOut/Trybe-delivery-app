@@ -1,45 +1,102 @@
-import React from 'react';
-import CheckoutProductsCard from '../components/CheckoutProductsCard';
-// import CheckoutProductsCard from '../components/CheckoutProductsCard';
+import React, { useContext, useState, useEffect } from 'react';
 // import axios from 'axios';
 import Navbar from '../components/Navbar';
+import Context from '../context/Context';
 
 export default function CheckoutClient() {
-  // const [page, setPage] = useState('');
-  // const [name, setName] = useState('');
-  // const [address, setAddress] = useState('');
-  // const [payment, setPayment] = useState('');
-  // const [isSubmitting, setIsSubmitting] = useState(false);
-  // const [isSubmitted, setIsSubmitted] = useState(false);
+  const { totalPrice, order } = useContext(Context);
+  const [showOrder, setShowOrder] = useState([]);
 
-  // const handleSubmit = (event) => {
-  //   event.preventDefault();
-  //   setIsSubmitting(true);
-  //   axios.post('http://localhost:3001/login', { cartItems, total, name, address, payment })
-  //     .then(() => setIsSubmitted(true))
-  //     .catch((error) => console.log(error))
-  //     .finally(() => setIsSubmitting(false));
-  // };
-  // if (isSubmitted) {
-  //   return <div>Thank you for your order!</div>;
-  // }
+  useEffect(() => {
+    const novoObjeto = {};
+    order.forEach(({ id, price, name }) => {
+      if (!novoObjeto[id]) {
+        novoObjeto[id] = {
+          id,
+          price,
+          name,
+          totalValue: price,
+          quantity: 0,
+        };
+      }
+
+      novoObjeto[id].price = parseFloat(price);
+      novoObjeto[id].totalValue += parseFloat(price);
+      novoObjeto[id].quantity += 1;
+    });
+    const novoArray = Object.values(novoObjeto).map((obj) => {
+      const price = parseFloat(obj.price).toFixed(2).replace('.', ',');
+      const totalValue = (
+        parseFloat(obj.totalValue) * obj.quantity
+      ).toFixed(2).replace('.', ',');
+
+      return {
+        ...obj,
+        price,
+        totalValue,
+      };
+    });
+    setShowOrder(novoArray);
+  }, [order]);
 
   return (
     <div>
       <Navbar />
-      {/* <div>
-        {products.map(({ id, name, price }) => (
-          <CheckoutProductsCard
-            key={ id }
-            id={ id }
-            name={ name }
-            price={ price.replace('.', ',') }
-          />
-        ))}
-      </div> */}
-      <CheckoutProductsCard />
+      <p>Finalizar Pedido</p>
       <div>
-        <p data-testid="customer_checkout__element-order-total-price">Total: R$ 28,46</p>
+        <span>Item</span>
+        <span>Descrição</span>
+        <span>Quantidade</span>
+        <span>Valor unitário</span>
+        <span>Sub-total</span>
+        <span>Remover Item</span>
+        {showOrder.map((item, i) => (
+          <div key={ i }>
+            <span
+              data-testid={ `customer_checkout__element-order-table-item-number-${i}` }
+            >
+              {i}
+            </span>
+            <p
+              data-testid={ `customer_checkout__element-order-table-name-${i}` }
+            >
+              {item.name}
+
+            </p>
+            <p
+              data-testid={ `customer_checkout__element-order-table-quantity-${i}` }
+            >
+              {item.quantity}
+
+            </p>
+            <p
+              data-testid={ `customer_checkout__element-order-table-unit-price-${i}` }
+            >
+              {item.price}
+
+            </p>
+            <p
+              data-testid={ `customer_checkout__element-order-table-sub-total-${i}` }
+            >
+              {item.totalValue}
+
+            </p>
+            <button
+              type="button"
+              data-testid={ `customer_checkout__element-order-table-remove-${i}` }
+            >
+              Remover
+
+            </button>
+          </div>
+        ))}
+      </div>
+      <div>
+        <p data-testid="customer_checkout__element-order-total-price">
+          Total: R$
+          {' '}
+          {totalPrice}
+        </p>
         <span>Detalhes e Endereço de Entrega</span>
         <label htmlFor="seller">
           Vendedora Responsável

@@ -9,6 +9,7 @@ import {
   Register,
   CheckoutClient,
   CustomerOrders,
+  CustomerOrderDetail,
 } from './Pages';
 
 function App() {
@@ -28,8 +29,9 @@ function App() {
         </div>
       </Route>
       <Route exact path="/register" component={ Register } />
-      <Route exact path="/checkout" component={ CheckoutClient } />
+      <Route exact path="/customer/checkout" component={ CheckoutClient } />
       <Route exact path="/customer/orders" component={ CustomerOrders } />
+      <Route exact path="/customer/orders/:id" component={ CustomerOrderDetail } />
     </Switch>
   );
 }

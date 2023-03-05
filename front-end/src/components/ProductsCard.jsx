@@ -16,17 +16,17 @@ function ProductsCard({ id, name, urlImage, price }) {
     setQuantity(quantityByProduct);
   }, [order, id]);
 
-  const addOrder = ({ target: { value } }) => {
+  const handleIncrement = ({ target: { value } }) => {
     setQuantity(value);
     const productsWithDifferentId = order.filter((orderId) => orderId !== id);
     const newProduct = [];
     for (let i = 1; i <= value; i += 1) {
-      newProduct.push({ id, name, urlImage, price });
+      newProduct.push({ id, name, urlImage, price, quantity });
     }
     setOrder([...productsWithDifferentId, ...newProduct]);
   };
 
-  const removeOrder = (productId) => {
+  const handleDecrement = (productId) => {
     const productsWithSameId = order
       .filter((orderByProduct) => orderByProduct.id === productId);
     productsWithSameId.pop();
@@ -53,7 +53,7 @@ function ProductsCard({ id, name, urlImage, price }) {
           data-testid={ `customer_products__button-card-rm-item-${id}` }
           type="button"
           name="decreaseButton"
-          onClick={ () => removeOrder(id) }
+          onClick={ () => handleDecrement(id) }
         >
           -
         </button>
@@ -61,7 +61,7 @@ function ProductsCard({ id, name, urlImage, price }) {
           type="number"
           data-testid={ `customer_products__input-card-quantity-${id}` }
           name="quantity"
-          onChange={ (e) => addOrder(e) }
+          onChange={ (e) => handleIncrement(e) }
           value={ quantity }
         />
         <button

@@ -28,8 +28,8 @@ export default function Products() {
     axiosProductsRequest();
   }, []);
 
-  const getTotalOrderValue = () => {
-    const total = order
+  const getTotalOrderValue = async () => {
+    const total = await order
       .reduce((acc, curr) => acc + parseFloat(curr.price), 0);
     setTotalPrice(total.toFixed(2).replace('.', ','));
   };
@@ -59,7 +59,7 @@ export default function Products() {
             urlImage={ urlImage }
             name={ name }
             price={ price }
-            quantity={ 0 }
+            // quantity={ 0 }
           />
         ))}
       </div>

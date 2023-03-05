@@ -16,12 +16,12 @@ function ProductsCard({ id, name, urlImage, price }) {
     setQuantity(quantityByProduct);
   }, [order, id]);
 
-  const handleIncrement = ({ target: { value } }) => {
+  const handleInput = ({ target: { value } }) => {
     setQuantity(value);
     const productsWithDifferentId = order.filter((orderId) => orderId !== id);
     const newProduct = [];
     for (let i = 1; i <= value; i += 1) {
-      newProduct.push({ id, name, urlImage, price, quantity });
+      newProduct.push({ id, name, urlImage, price });
     }
     setOrder([...productsWithDifferentId, ...newProduct]);
   };
@@ -61,7 +61,7 @@ function ProductsCard({ id, name, urlImage, price }) {
           type="number"
           data-testid={ `customer_products__input-card-quantity-${id}` }
           name="quantity"
-          onChange={ (e) => handleIncrement(e) }
+          onChange={ (e) => handleInput(e) }
           value={ quantity }
         />
         <button

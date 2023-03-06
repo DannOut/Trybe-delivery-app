@@ -33,8 +33,19 @@ const changeStatus = async (req, res, next) => {
   }
 };
 
+const getAllSellers = async (req, res, next) => {
+  try {
+  const { authorization } = req.headers;
+  const allSellers = await salesService.getAllSellers(authorization);
+  res.status(200).json(allSellers);
+  } catch (e) {
+    next(e);
+  }
+};
+
 module.exports = {
   getAllSales,
   getSaleById,
   changeStatus,
+  getAllSellers,
 };

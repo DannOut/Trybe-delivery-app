@@ -14,6 +14,17 @@ const getAllSales = async (token) => {
   return { sales, user: { ...userWithoutPassword } };
 };
 
+const getAllSellers = async (token) => {
+  const { role } = decodeToken(token);
+  if (role === 'seller') throw new ErrorClass(401, 'Acess unauthorized');
+  const allUsers = await User.findAll({
+    where: { role: 'seller' },
+    raw: true,
+    attributes: ['name', 'email'],
+});
+  return allUsers;
+};
+
 const getSaleById = async (id, token) => {
   const { role } = decodeToken(token);
   if (role === 'customer') throw new ErrorClass(401, 'Acess unauthorized');
@@ -45,4 +56,5 @@ module.exports = {
   getAllSales,
   getSaleById,
   changeStatus,
+  getAllSellers,
 };

@@ -9,9 +9,12 @@ export default function CheckoutClient() {
   const [showOrder, setShowOrder] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [sellers, setSellers] = useState([]);
+  const [totalPriceToSent, setTotalPriceToSent] = useState(0);
+
   const history = useHistory();
 
   const baseURLSellers = 'http://localhost:3001/sales/sellers';
+  const postCheckoutURL = 'http://localhost:3001/checkout';
 
   const handleRemoveItem = (itemId) => {
     const updatedOrder = showOrder.filter((item) => item.id !== itemId);
@@ -37,26 +40,12 @@ export default function CheckoutClient() {
       setSellers(result.data);
     };
     allSellers();
-    console.log(sellers);
-  }, [sellers]);
+  }, []);
 
   useEffect(() => {
     const newArray = [];
     let totalValue = 0;
     setForm({});
-    // const allSellers = async () => {
-    //   const { token } = JSON.parse(localStorage.getItem('user')) || '';
-    //   const result = await axios
-    //     .get(baseURLSellers, {
-    //       headers: {
-    //         Authorization: token,
-    //       },
-    //     })
-    //     .then((response) => response)
-    //     .catch((response) => response);
-    //   setSellers(result.data);
-    // };
-    // allSellers();
     order.forEach(({ id, price, name }) => {
       const index = newArray.findIndex((obj) => obj.id === id);
       const negativeIndex = -1;
@@ -83,6 +72,7 @@ export default function CheckoutClient() {
 
     setShowOrder(newArray);
     setTotalPrice(totalValue.toFixed(2).replace('.', ','));
+    setTotalPriceToSent(Number(totalValue.toFixed(2)));
   }, [order, setForm]);
 
   function handleChange({ target }) {
@@ -90,9 +80,33 @@ export default function CheckoutClient() {
     setForm({ ...form, [name]: value });
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    history.pushState('/');
+    const createSale = async () => {
+      const productsToSend = showOrder.map((product) => {
+        delete product.totalValue;
+        delete product.name;
+        return { ...product };
+      });
+      const { token, email } = JSON.parse(localStorage.getItem('user')) || '';
+      const body = {
+        customerEmail: email,
+        sellerEmail: form.seller,
+        totalPrice: totalPriceToSent,
+        deliveryAddress: form.address,
+        deliveryNumber: form.number,
+        products: productsToSend,
+      };
+      const result = await axios
+        .post(postCheckoutURL, body, {
+          headers: { Authorization: token },
+        })
+        .then((response) => response)
+        .catch((response) => response);
+      console.log(result);
+      history.push(`/customer/orders/${result.data.id}`);
+    };
+    await createSale();
   };
 
   return (
@@ -168,13 +182,13 @@ export default function CheckoutClient() {
             onChange={ handleChange }
             data-testid="customer_checkout__select-seller"
           >
-            <option selected value> -- Selecione o vendedor -- </option>
-            <option value="Fulana Pereira">
-              Fulana Pereira
-            </option>
+            <option defaultValue=""> -- Selecione o vendedor -- </option>
+            {sellers.map((seller) => (
+              <option value={ seller.email } key={ seller.email }>{seller.name}</option>
+            ))}
           </select>
         </label>
-        <form>
+        <form onSubmit={ (e) => handleSubmit(e) }>
           <label htmlFor="address">
             Endereço
             <input
@@ -202,7 +216,6 @@ export default function CheckoutClient() {
           <button
             data-testid="customer_checkout__button-submit-order"
             type="submit"
-            onSubmit={ () => handleSubmit(e) }
           >
             Finalizar
           </button>

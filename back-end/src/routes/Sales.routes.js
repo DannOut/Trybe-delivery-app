@@ -12,6 +12,12 @@ router.get(
 );
 
 router.get(
+  '/sellers',
+  verifyToken,
+  salesController.getAllSellers,
+);
+
+router.get(
   '/:id',
   verifyToken,
   salesController.getSaleById,

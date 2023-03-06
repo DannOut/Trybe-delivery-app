@@ -12,14 +12,12 @@ export default function SellerOrders() {
         headers: { Authorization: token },
       })
       .then((response) => {
-        console.log('response.data :>> ', response.data);
         setOrders(response.data.sales);
       })
       .catch((erro) => {
         console.log(erro);
       });
   }, []);
-  console.log('orders :>> ', orders);
   return (
     <div>
       <Navbar />

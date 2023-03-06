@@ -25,9 +25,7 @@ const getAllSellers = async (token) => {
   return allUsers;
 };
 
-const getSaleById = async (id, token) => {
-  const { role } = decodeToken(token);
-  if (role === 'customer') throw new ErrorClass(401, 'Acess unauthorized');
+const getSaleById = async (id) => {
   const checkSale = await Sale.findByPk(id);
   if (!checkSale) throw new ErrorClass(404, 'Sale not found!');
   const products = await SaleProduct.findAll({

@@ -1,7 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useHistory, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Context from '../context/Context';
+import { redirectBasedInRole } from '../utils/Helpers';
 
 export default function Login() {
   const {
@@ -12,7 +13,6 @@ export default function Login() {
   } = useContext(Context);
   const [disabled, setDisabled] = useState(true);
 
-  const history = useHistory();
   const baseURL = 'http://localhost:3001/login';
   const NOTFOUND = 404;
 
@@ -39,7 +39,7 @@ export default function Login() {
       .then((response) => response).catch(({ response }) => response);
     if (result.status !== NOTFOUND) {
       localStorage.setItem('user', JSON.stringify(result.data));
-      history.push('/customer/products');
+      redirectBasedInRole(result.data.role);
       setForm({
         ...form,
         password: '',

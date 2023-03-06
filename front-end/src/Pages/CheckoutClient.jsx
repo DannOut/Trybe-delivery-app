@@ -1,13 +1,17 @@
 import React, { useContext, useState, useEffect } from 'react';
+import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Context from '../context/Context';
 
 export default function CheckoutClient() {
-  const { order } = useContext(Context);
+  const { order, form, setForm } = useContext(Context);
   const [showOrder, setShowOrder] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [sellers, setSellers] = useState([]);
   const history = useHistory();
+
+  const baseURLSellers = 'http://localhost:3001/sales/sellers';
 
   const handleRemoveItem = (itemId) => {
     const updatedOrder = showOrder.filter((item) => item.id !== itemId);
@@ -17,13 +21,42 @@ export default function CheckoutClient() {
     });
     setTotalPrice(totalValue.toFixed(2).replace('.', ','));
     setShowOrder(updatedOrder);
-    console.log(updatedOrder);
   };
+
+  useEffect(() => {
+    const allSellers = async () => {
+      const { token } = JSON.parse(localStorage.getItem('user')) || '';
+      const result = await axios
+        .get(baseURLSellers, {
+          headers: {
+            Authorization: token,
+          },
+        })
+        .then((response) => response)
+        .catch((response) => response);
+      setSellers(result.data);
+    };
+    allSellers();
+    console.log(sellers);
+  }, [sellers]);
 
   useEffect(() => {
     const newArray = [];
     let totalValue = 0;
-
+    setForm({});
+    // const allSellers = async () => {
+    //   const { token } = JSON.parse(localStorage.getItem('user')) || '';
+    //   const result = await axios
+    //     .get(baseURLSellers, {
+    //       headers: {
+    //         Authorization: token,
+    //       },
+    //     })
+    //     .then((response) => response)
+    //     .catch((response) => response);
+    //   setSellers(result.data);
+    // };
+    // allSellers();
     order.forEach(({ id, price, name }) => {
       const index = newArray.findIndex((obj) => obj.id === id);
       const negativeIndex = -1;
@@ -50,7 +83,12 @@ export default function CheckoutClient() {
 
     setShowOrder(newArray);
     setTotalPrice(totalValue.toFixed(2).replace('.', ','));
-  }, [order]);
+  }, [order, setForm]);
+
+  function handleChange({ target }) {
+    const { name, value } = target;
+    setForm({ ...form, [name]: value });
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -124,20 +162,27 @@ export default function CheckoutClient() {
         <label htmlFor="seller">
           Vendedora Responsável
           <select
-            id="estado"
-            name="estado"
+            id="seller"
+            name="seller"
+            value={ form.seller }
+            onChange={ handleChange }
             data-testid="customer_checkout__select-seller"
           >
+            <option selected value> -- Selecione o vendedor -- </option>
             <option value="Fulana Pereira">
               Fulana Pereira
             </option>
           </select>
         </label>
         <form>
-          <label htmlFor="endereco">
+          <label htmlFor="address">
             Endereço
             <input
               type="text"
+              id="address"
+              name="address"
+              value={ form.address }
+              onChange={ handleChange }
               placeholder="Digite o endereço"
               data-testid="customer_checkout__input-address"
             />
@@ -145,7 +190,11 @@ export default function CheckoutClient() {
           <label htmlFor="number">
             Número
             <input
-              type="text"
+              type="number"
+              id="number"
+              name="number"
+              value={ form.number }
+              onChange={ handleChange }
               placeholder="Digite o número"
               data-testid="customer_checkout__input-address-number"
             />

@@ -7,11 +7,15 @@ import {
   Products,
   RedirectToLogin,
   Register,
+  SellerOrders,
+  SellerOrdersDetails,
 } from './Pages';
 
 function App() {
   return (
     <Switch>
+      <Route exact path="/seller/orders" component={ SellerOrders } />
+      <Route exact path="/seller/orders/:id" component={ SellerOrdersDetails } />
       <Route exact path="/customer/products" component={ Products } />
       <Route exact path="/login">
         <div className="App">

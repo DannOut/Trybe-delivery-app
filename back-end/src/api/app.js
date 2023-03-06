@@ -7,6 +7,7 @@ const {
   productsRouter,
   checkOutRouter,
   salesRouter,
+  adminRouter,
 } = require('../routes');
 
 const app = express();
@@ -21,6 +22,7 @@ app.use('/register', registerRouter);
 app.use('/products', productsRouter);
 app.use('/checkout', checkOutRouter);
 app.use('/sales', salesRouter);
+app.use('/manage', adminRouter);
 app.use(errorHandler);
 
 module.exports = app;

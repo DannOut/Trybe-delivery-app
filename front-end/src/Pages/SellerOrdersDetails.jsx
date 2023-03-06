@@ -6,35 +6,34 @@ import Navbar from '../components/Navbar';
 
 export default function SellerOrdersDetails({ match: { params: { id } } }) {
   // const history = useHistory();
-  const [order, setOrder] = useState([]);
+  const [order, setOrder] = useState({});
   useEffect(() => {
     const { token } = JSON.parse(localStorage.getItem('user')) || '';
     api
-      .get('/sales', {
+      .get(`/sales/${id}`, {
         headers: { Authorization: token },
-        params: {
-          ID: id,
-        } })
+      })
       .then((response) => {
-        setOrder(response.data.sales);
+        setOrder(response.data);
       })
       .catch((erro) => {
         console.log(erro);
       });
-    console.log(order);
   }, []);
   return (
     <>
       <div>
         <Navbar />
         <h2
-          data-testid="seller_order_details__element-order-details-label-order-id"
+          data-testid={ `seller_order_details__element-order-details-label-order-${id}` }
         >
           Detalhe do Pedido
         </h2>
-        <div>
-          Pedido
-        </div>
+        {order.products.map(({ id, totalPrice, sellerId, saleDate, status }) => (
+          <div>
+            Pedido
+          </div>
+        ))}
         <div
           data-testid="seller_order_details__element-order-details-label-order-date"
         >

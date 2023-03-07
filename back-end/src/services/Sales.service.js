@@ -20,7 +20,7 @@ const getAllSellers = async (token) => {
   const allUsers = await User.findAll({
     where: { role: 'seller' },
     raw: true,
-    attributes: ['name', 'email'],
+    attributes: ['name', 'email', 'id'],
 });
   return allUsers;
 };

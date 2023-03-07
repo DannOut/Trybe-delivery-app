@@ -4,11 +4,10 @@ const ErrorClass = require('../utils/ErrorClass');
 const { decodeToken } = require('../auth/jwtFunctions');
 const changeToNumber = require('../utils/ReplaceSaleValues');
 
-const validatePersons = async (customerEmail, sellerEmail) => {
+const validatePersons = async (customerEmail, sellerId) => {
   const customer = await User
   .findOne({ where: { email: customerEmail, role: 'customer' }, raw: true });
-  const seller = await User
-  .findOne({ where: { email: sellerEmail, role: 'seller' }, raw: true });
+  const seller = await User.findByPk(sellerId);
   if (!customer) throw new ErrorClass(404, 'customer not Found');
   if (!seller) throw new ErrorClass(404, 'seller not Found');
   return { userId: customer.id, sellerId: seller.id };
@@ -40,7 +39,7 @@ const createSale = async (newSale, authorization) => {
   const { email } = await User
   .findOne({ where: { email: sale.customerEmail, role: 'customer' }, raw: true });
   if (email !== token.email) throw new ErrorClass(404, 'User is not authorized');
-  const { userId, sellerId } = await validatePersons(sale.customerEmail, sale.sellerEmail);
+  const { userId, sellerId } = await validatePersons(sale.customerEmail, sale.sellerId);
   const newSaleCreated = await Sale.create({ ...sale, userId, sellerId, raw: true });
   checkProducts(sale.products);
   validateProducts(sale.products, sale.totalPrice);

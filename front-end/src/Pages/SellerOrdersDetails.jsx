@@ -7,7 +7,8 @@ import { baseDetailsSeller, ORDER_SENT, SLICE_DATE, PREPARING } from '../utils/C
 
 export default function SellerOrdersDetails({ match: { params: { id } } }) {
   const [order, setOrder] = useState(baseDetailsSeller);
-  const [isDisabled, setIsDisabled] = useState(false);
+  const [isDisOrderSent, setIsDisOrderSent] = useState(false);
+  const [isDisPrepOrd, setIsDisPrepOrd] = useState(false);
 
   useEffect(() => {
     const { token } = JSON.parse(localStorage.getItem('user')) || '';
@@ -31,7 +32,10 @@ export default function SellerOrdersDetails({ match: { params: { id } } }) {
       })
       .then(() => {
         if (e.target.value === ORDER_SENT) {
-          setIsDisabled(true);
+          setIsDisOrderSent(true);
+        }
+        if (e.target.value === PREPARING) {
+          setIsDisPrepOrd(true);
         }
       })
       .catch((erro) => {
@@ -60,7 +64,7 @@ export default function SellerOrdersDetails({ match: { params: { id } } }) {
           placeholder="Preparar Pedido"
           onClick={ changeStatus }
           disabled={
-            isDisabled || order.status === ORDER_SENT || order.status === PREPARING
+            isDisPrepOrd || (order.status === ORDER_SENT || order.status === PREPARING)
           }
         >
           Preparar Pedido
@@ -71,7 +75,7 @@ export default function SellerOrdersDetails({ match: { params: { id } } }) {
           data-testid="seller_order_details__button-dispatch-check"
           placeholder="Saiu para Entrega"
           onClick={ changeStatus }
-          disabled={ isDisabled || order.status === ORDER_SENT }
+          disabled={ isDisOrderSent || order.status === ORDER_SENT }
         >
           Saiu para Entrega
         </button>
@@ -86,7 +90,6 @@ export default function SellerOrdersDetails({ match: { params: { id } } }) {
             <th> Sub-total </th>
           </tr>
         </thead>
-
         {order.products.map(({ quantity, product }, index) => (
           <tbody key={ index }>
             <tr>

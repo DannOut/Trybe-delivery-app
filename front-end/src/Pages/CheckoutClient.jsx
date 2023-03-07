@@ -207,7 +207,7 @@ export default function CheckoutClient() {
           <label htmlFor="number">
             Número
             <input
-              type="number"
+              type="text"
               id="number"
               name="number"
               value={ form.number }

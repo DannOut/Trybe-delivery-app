@@ -7,8 +7,9 @@ const redirectBasedInRole = (role) => {
     window.location.pathname = '/seller/orders';
     return;
   }
-  // if (role === 'administrator')
-  window.location.pathname = '/';
+  if (role === 'administrator') {
+    window.location.pathname = '/admin/manage';
+  }
 };
 
 const teste = 0;

@@ -2,7 +2,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 export default function Navbar() {
-  const { name } = JSON.parse(localStorage.getItem('user')) || '';
+  const { name, role } = JSON.parse(localStorage.getItem('user')) || '';
   const history = useHistory();
 
   const logout = () => {
@@ -10,10 +10,16 @@ export default function Navbar() {
     history.push('/login');
   };
 
+  const navBarDynamicInfoLeft = () => {
+    if (role === 'administrator') return 'Gerênciar Usuários';
+    if (role === 'seller') return 'Menu de vendas';
+    if (role === 'customer') return 'Produtos';
+  };
+
   return (
     <nav>
       <div data-testid="customer_products__element-navbar-link-products">
-        Products
+        { navBarDynamicInfoLeft() }
       </div>
       <div data-testid="customer_products__element-navbar-link-orders">
         Orders

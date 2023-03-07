@@ -12,6 +12,7 @@ export default function RegisterForm() {
     password: '',
     role: 'seller',
   });
+  const { token } = JSON.parse(localStorage.getItem('user')) || '';
 
   async function handleSubmitNewRegister(event) {
     event.preventDefault();
@@ -24,7 +25,6 @@ export default function RegisterForm() {
     };
     console.log('data :>> ', data);
     try {
-      const { token } = JSON.parse(localStorage.getItem('user')) || '';
       await api.post(
         '/manage',
         data,

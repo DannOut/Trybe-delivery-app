@@ -9,7 +9,6 @@ export default function CheckoutClient() {
   const [showOrder, setShowOrder] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [sellers, setSellers] = useState([]);
-  const [totalPriceToSent, setTotalPriceToSent] = useState(0);
   const [form, setForm] = useState({
     seller: 'fulana@deliveryapp.com',
   });
@@ -67,7 +66,7 @@ export default function CheckoutClient() {
       } else {
         newArray[index].quantity += 1;
         newArray[index].totalValue = parseFloat(Math
-          .floor(newArray[index].price * newArray[index].quantity * 100) / 100)
+          .fround(newArray[index].price * newArray[index].quantity * 100) / 100)
           .toFixed(2).replace('.', ',');
         totalValue += newArray[index].price;
       }
@@ -75,7 +74,6 @@ export default function CheckoutClient() {
 
     setShowOrder(newArray);
     setTotalPrice(totalValue.toFixed(2).replace('.', ','));
-    setTotalPriceToSent(Number(totalValue.toFixed(2)));
   }, [order, setForm]);
 
   function handleChange({ target }) {
@@ -89,13 +87,14 @@ export default function CheckoutClient() {
       const productsToSend = showOrder.map((product) => {
         delete product.totalValue;
         delete product.name;
+        product.price = product.price.toFixed(2).toString();
         return { ...product };
       });
       const { token, email } = JSON.parse(localStorage.getItem('user')) || '';
       const body = {
         customerEmail: email,
         sellerEmail: form.seller,
-        totalPrice: totalPriceToSent,
+        totalPrice,
         deliveryAddress: form.address,
         deliveryNumber: form.number,
         products: productsToSend,

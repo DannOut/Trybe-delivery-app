@@ -3,11 +3,12 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import api from '../Service/api';
 import Navbar from '../components/Navbar';
+import { baseDetailsSeller, ORDER_SENT, SLICE_DATE, PREPARING } from '../utils/Const';
 
 export default function SellerOrdersDetails({ match: { params: { id } } }) {
-  // const history = useHistory();
-  const [order, setOrder] = useState({ products: [] });
-  const [isDisabled, setIsDisabled] = useState(false);
+  const [order, setOrder] = useState(baseDetailsSeller);
+  const [isDisOrderSent, setIsDisOrderSent] = useState(false);
+  const [isDisPrepOrd, setIsDisPrepOrd] = useState(false);
 
   useEffect(() => {
     const { token } = JSON.parse(localStorage.getItem('user')) || '';
@@ -30,8 +31,11 @@ export default function SellerOrdersDetails({ match: { params: { id } } }) {
         headers: { Authorization: token },
       })
       .then(() => {
-        if (e.target.value === 'Em Trânsito') {
-          setIsDisabled(true);
+        if (e.target.value === ORDER_SENT) {
+          setIsDisOrderSent(true);
+        }
+        if (e.target.value === PREPARING) {
+          setIsDisPrepOrd(true);
         }
       })
       .catch((erro) => {
@@ -47,47 +51,57 @@ export default function SellerOrdersDetails({ match: { params: { id } } }) {
       >
         Detalhe do Pedido
       </h2>
-      {order.products.map(({ id: orderId, totalPrice, saleDate, status }, index) => (
-        <div key={ index.toString() }>
-          <div>
-            Pedido
-            { orderId }
-          </div>
-          <div
-            data-testid="seller_order_details__element-order-details-label-order-date"
-          >
-            Data
-            {saleDate}
-          </div>
-          <button
-            type="submit"
-            value="Preparando"
-            data-testid="seller_order_details__button-preparing-check"
-            placeholder="Preparar Pedido"
-            onClick={ changeStatus }
-            disabled={ isDisabled }
-          >
-            Preparar Pedido
-          </button>
-          <button
-            type="submit"
-            value="Em Trânsito"
-            data-testid="seller_order_details__button-dispatch-check"
-            placeholder="Saiu para Entrega"
-            onClick={ changeStatus }
-            disabled={ isDisabled }
-          >
-            Saiu para Entrega
-            {status}
-          </button>
-          <div
-            data-testid="seller_order_details__element-order-total-price"
-          >
-            Total
-            {totalPrice}
-          </div>
-        </div>
-      ))}
+      <div>
+        <h3>{`PEDIDO ${id}`}</h3>
+        <h4 data-testid="seller_order_details__element-order-details-label-order-date">
+          {order.saleDate.slice(0, SLICE_DATE)}
+        </h4>
+        <h5>{order.status}</h5>
+        <button
+          type="submit"
+          value={ PREPARING }
+          data-testid="seller_order_details__button-preparing-check"
+          placeholder="Preparar Pedido"
+          onClick={ changeStatus }
+          disabled={
+            isDisPrepOrd || (order.status === ORDER_SENT || order.status === PREPARING)
+          }
+        >
+          Preparar Pedido
+        </button>
+        <button
+          type="submit"
+          value={ ORDER_SENT }
+          data-testid="seller_order_details__button-dispatch-check"
+          placeholder="Saiu para Entrega"
+          onClick={ changeStatus }
+          disabled={ isDisOrderSent || order.status === ORDER_SENT }
+        >
+          Saiu para Entrega
+        </button>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th> Item </th>
+            <th> Descrição </th>
+            <th> Quantidade </th>
+            <th> Valor Unitário </th>
+            <th> Sub-total </th>
+          </tr>
+        </thead>
+        {order.products.map(({ quantity, product }, index) => (
+          <tbody key={ index }>
+            <tr>
+              <td>{product.id}</td>
+              <td>{product.name}</td>
+              <td>{quantity}</td>
+              <td>{ product.price }</td>
+              <td>{ (product.price * quantity).toFixed(2) }</td>
+            </tr>
+          </tbody>
+        ))}
+      </table>
     </div>
   );
 }

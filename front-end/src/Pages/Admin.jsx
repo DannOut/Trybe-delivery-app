@@ -22,10 +22,69 @@ export default function Admin() {
     getUsers();
   }, []);
 
+  const deleteHandler = async ({ target: { value: id } }) => {
+    try {
+      const { status } = await api
+        .delete(`/manage/${id}`, {
+          headers: {
+            Authorization: token,
+          },
+        });
+      return { status };
+    } catch ({ response: { data, status } }) {
+      return { data: data.message, status };
+    }
+  };
+
   return (
     <div>
       <Navbar />
       <RegisterForm />
+
+      <h2> Lista de Usuário</h2>
+      <table>
+        <thead>
+          <tr>
+            <th> Item </th>
+            <th> Nome </th>
+            <th> E-mail </th>
+            <th> Tipo </th>
+            <th> Excluir </th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            allUsers.map(({ id, name, email, role }, ind) => (
+              <tr key={ ind }>
+                <td data-testid={ `admin_manage__element-user-table-item-number-${ind}` }>
+                  { id }
+                </td>
+                <td data-testid={ `admin_manage__element-user-table-name-${ind}` }>
+                  { name }
+                </td>
+                <td data-testid={ `admin_manage__element-user-table-email-${ind}` }>
+                  { email }
+                </td>
+                <td data-testid={ `admin_manage__element-user-table-role-${ind}` }>
+                  { role }
+                </td>
+                <td>
+                  <button
+                    type="button"
+                    data-testid={
+                      `admin_manage__element-user-table-name-${ind}`
+                    }
+                    value={ id }
+                    onClick={ deleteHandler }
+                  >
+                    Excluir
+                  </button>
+                </td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
     </div>
   );
 }

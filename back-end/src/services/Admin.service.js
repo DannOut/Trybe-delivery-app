@@ -24,7 +24,8 @@ const getAllUsers = async () => {
 const deleteUserById = async (id) => {
   const checkIfExists = await User.findByPk(id);
   if (!checkIfExists) throw new ErrorClass(404, 'User does not exists');
-  await User.destroy({ where: { id } });
+  const teste = await User.destroy({ where: { id } });
+  return teste;
 };
 
 module.exports = {

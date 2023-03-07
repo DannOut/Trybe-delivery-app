@@ -24,7 +24,7 @@ const createSale = async (sale, authorization) => {
   const token = decodeToken(authorization);
   const { email } = await User
   .findOne({ where: { email: sale.customerEmail, role: 'customer' }, raw: true });
-  if (email !== token.email) throw new ErrorClass(404, 'seller not Found');
+  if (email !== token.email) throw new ErrorClass(404, 'User is not authorized');
   const { userId, sellerId } = await validatePersons(sale.customerEmail, sale.sellerEmail);
   const newSale = await Sale.create({ ...sale, userId, sellerId, raw: true });
   validateProducts(sale.products, sale.totalPrice);

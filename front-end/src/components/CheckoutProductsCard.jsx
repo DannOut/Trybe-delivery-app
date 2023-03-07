@@ -34,7 +34,7 @@ export default function CheckoutProductsCard() {
               R$16,30
             </th>
             <th data-testid="customer_checkout__element-order-table-remove-<index>">
-              <button type="button">Remover</button>
+              Test
             </th>
           </tr>
           {/* {(filteredList.length === 0 ? data : filteredList).map((obj, index) => (

@@ -12,7 +12,7 @@ const getAllUsers = async (req, res, next) => {
 const registerUser = async (req, res, next) => {
   try {
     const newUser = await adminService.registerUser(req.body);
-    res.status(201).json({ ...newUser });
+    res.status(201).json('Created');
   } catch (e) {
     next(e);
   }

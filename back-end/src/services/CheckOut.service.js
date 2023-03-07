@@ -23,7 +23,7 @@ const createProductsSale = async (saleId, products) => {
 const createSale = async (sale, authorization) => {
   const token = decodeToken(authorization);
   const { email } = await User
-  .findOne({ where: { email: sale.email, role: 'customer' }, raw: true });
+  .findOne({ where: { email: sale.customerEmail, role: 'customer' }, raw: true });
   if (email !== token.email) throw new ErrorClass(404, 'seller not Found');
   const { userId, sellerId } = await validatePersons(sale.customerEmail, sale.sellerEmail);
   const newSale = await Sale.create({ ...sale, userId, sellerId, raw: true });

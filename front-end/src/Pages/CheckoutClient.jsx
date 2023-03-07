@@ -5,11 +5,14 @@ import Navbar from '../components/Navbar';
 import Context from '../context/Context';
 
 export default function CheckoutClient() {
-  const { order, form, setForm } = useContext(Context);
+  const { order } = useContext(Context);
   const [showOrder, setShowOrder] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [sellers, setSellers] = useState([]);
   const [totalPriceToSent, setTotalPriceToSent] = useState(0);
+  const [form, setForm] = useState({
+    seller: 'fulana@deliveryapp.com',
+  });
 
   const history = useHistory();
 
@@ -45,7 +48,7 @@ export default function CheckoutClient() {
   useEffect(() => {
     const newArray = [];
     let totalValue = 0;
-    setForm({});
+    setForm({ seller: 'fulana@deliveryapp.com' });
     order.forEach(({ id, price, name }) => {
       const index = newArray.findIndex((obj) => obj.id === id);
       const negativeIndex = -1;
@@ -182,7 +185,7 @@ export default function CheckoutClient() {
             onChange={ handleChange }
             data-testid="customer_checkout__select-seller"
           >
-            <option defaultValue=""> -- Selecione o vendedor -- </option>
+            <option defaultValue="fulana@deliveryapp.com">Selecione o vendedor</option>
             {sellers.map((seller) => (
               <option value={ seller.email } key={ seller.email }>{seller.name}</option>
             ))}

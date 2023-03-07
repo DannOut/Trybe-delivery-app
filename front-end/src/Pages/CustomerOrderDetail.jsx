@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import api from '../Service/api';
-
 // import { useHistory } from 'react-router-dom';
 import CheckoutProductsCard from '../components/CheckoutProductsCard';
 import Navbar from '../components/Navbar';
@@ -8,6 +7,7 @@ import Navbar from '../components/Navbar';
 export default function CustomerOrderDetail() {
   const [sales, setSales] = useState([]);
   const [products, setProducts] = useState([]);
+  console.log(products);
   useEffect(() => {
     // declare the data fetching function
 

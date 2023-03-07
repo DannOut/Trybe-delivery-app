@@ -93,7 +93,7 @@ export default function CheckoutClient() {
       const { token, email } = JSON.parse(localStorage.getItem('user')) || '';
       const body = {
         customerEmail: email,
-        sellerEmail: form.seller,
+        sellerId: form.seller,
         totalPrice,
         deliveryAddress: form.address,
         deliveryNumber: form.number,

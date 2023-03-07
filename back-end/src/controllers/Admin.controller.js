@@ -21,8 +21,8 @@ const registerUser = async (req, res, next) => {
 const deleteUserById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { teste } = await adminService.deleteUserById(id);
-    res.status(204).json({ teste });
+    await adminService.deleteUserById(id);
+    res.status(204).end();
   } catch (e) {
     next(e);
   }

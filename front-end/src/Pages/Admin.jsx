@@ -7,30 +7,31 @@ export default function Admin() {
   const { token } = JSON.parse(localStorage.getItem('user')) || '';
   const [allUsers, setAllUsers] = useState([]);
 
+  const getUsers = async () => {
+    const allRegisteredUsers = await api
+      .get('/manage', {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((response) => response)
+      .catch((response) => response);
+    setAllUsers(allRegisteredUsers.data);
+  };
+
   useEffect(() => {
-    const getUsers = async () => {
-      const allRegisteredUsers = await api
-        .get('/manage', {
-          headers: {
-            Authorization: token,
-          },
-        })
-        .then((response) => response)
-        .catch((response) => response);
-      setAllUsers(allRegisteredUsers.data);
-    };
     getUsers();
   }, []);
 
   const deleteHandler = async ({ target: { value: id } }) => {
     try {
-      const { status } = await api
+      await api
         .delete(`/manage/${id}`, {
           headers: {
             Authorization: token,
           },
         });
-      return { status };
+      getUsers();
     } catch ({ response: { data, status } }) {
       return { data: data.message, status };
     }

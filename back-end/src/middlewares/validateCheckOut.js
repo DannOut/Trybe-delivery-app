@@ -6,6 +6,7 @@ const verifyEmails = (customerEmail, sellerEmail) => {
 };
 
 const validateCheckOut = (req, _res, next) => {
+  console.log(req.body);
   const { customerEmail, sellerEmail, totalPrice, deliveryAddress, deliveryNumber } = req.body;
   const verifiedEmails = verifyEmails(customerEmail, sellerEmail);
   if (!verifiedEmails) throw new ErrorClass(404, 'Missing customerEmail or sellerEmail');

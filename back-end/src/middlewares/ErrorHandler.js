@@ -2,6 +2,7 @@ const { JsonWebTokenError } = require('jsonwebtoken');
 const ErrorClass = require('../utils/ErrorClass');
 
 const errorHandler = (error, _req, res, _next) => {
+  console.log(error);
   if (error instanceof ErrorClass) {
     return res.status(error.statusCode).json({ message: error.message });
   }

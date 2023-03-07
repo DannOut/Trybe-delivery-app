@@ -186,7 +186,7 @@ export default function CheckoutClient() {
           >
             <option defaultValue="fulana@deliveryapp.com">Selecione o vendedor</option>
             {sellers.map((seller) => (
-              <option value={ seller.email } key={ seller.email }>{seller.name}</option>
+              <option value={ seller.id } key={ seller.email }>{seller.name}</option>
             ))}
           </select>
         </label>

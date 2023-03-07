@@ -1,35 +1,37 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import api from '../Service/api';
+// import { useHistory } from 'react-router-dom';
 
 export default function RegisterForm() {
-  const history = useHistory();
+  // const history = useHistory();
   const [disabled, setDisabled] = useState(true);
   const [errMsg, setErrMsg] = useState('');
   const [formRegister, setFormRegister] = useState({
     name: '',
     email: '',
     password: '',
+    role: 'seller',
   });
 
   async function handleSubmitNewRegister(event) {
     event.preventDefault();
-    const { name, email, password } = formRegister;
+    const { name, email, password, role } = formRegister;
     const data = {
       name,
       email,
       password,
+      role,
     };
-
+    console.log('data :>> ', data);
     try {
-      const response = await api.post(
-        '/register',
-        JSON.stringify({ ...data }),
-        {
-          headers: { 'Content-Type': 'application/json' },
-        },
+      const { token } = JSON.parse(localStorage.getItem('user')) || '';
+      await api.post(
+        '/manage',
+        data,
+        { headers: {
+          Authorization: token,
+        } },
       );
-      console.log(response);
-      history.push('/customer/products');
     } catch (err) {
       if (!err?.response) {
         setErrMsg('No Server Response');
@@ -49,15 +51,17 @@ export default function RegisterForm() {
     const MIN_CARACTERE_PASS = 6;
     const validateEmail = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/gi;
 
-    const { name, email, password } = formRegister;
+    const { name, email, password, role } = formRegister;
     if (
       name.length >= MIN_CARACTERE_NAME
       && password.length >= MIN_CARACTERE_PASS
       && validateEmail.test(email)
+      && role
     ) {
       setDisabled(false);
     }
   }, [formRegister]);
+
   return (
     <section>
       <h1>Cadastro</h1>
@@ -65,7 +69,6 @@ export default function RegisterForm() {
         onSubmit={ (event) => {
           handleSubmitNewRegister(event);
         } }
-        action=""
       >
         <label htmlFor="name">
           <input
@@ -101,19 +104,19 @@ export default function RegisterForm() {
           />
         </label>
 
-        {/* <label htmlFor="role">
+        <label htmlFor="role">
           <select
             name="role"
             id="role"
             data-testid="admin_manage__select-role"
-            value={ role }
-            onChange={ (e) => setRole(e.target.value) }
+            value={ formRegister.role }
+            onChange={ handleChange }
           >
             <option value="seller">Vendedor</option>
             <option value="customer">Cliente</option>
             <option value="administrator">Administrador</option>
           </select>
-        </label> */}
+        </label>
 
         <button
           disabled={ disabled }

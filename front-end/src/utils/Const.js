@@ -1,3 +1,5 @@
 const baseDetailsSeller = { products: [], saleDate: '', status: '' };
-const SLICEDATE = 10;
-export { baseDetailsSeller, SLICEDATE };
+const SLICE_DATE = 10;
+const ORDER_SENT = 'Em Trânsito';
+const PREPARING = 'Preparando';
+export { baseDetailsSeller, SLICE_DATE, ORDER_SENT, PREPARING };

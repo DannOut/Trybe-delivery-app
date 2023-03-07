@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import api from '../Service/api';
 import Navbar from '../components/Navbar';
-import { baseDetailsSeller, SLICEDATE } from '../utils/Const';
+import { baseDetailsSeller, ORDER_SENT, SLICE_DATE, PREPARING } from '../utils/Const';
 
 export default function SellerOrdersDetails({ match: { params: { id } } }) {
   const [order, setOrder] = useState(baseDetailsSeller);
@@ -30,7 +30,7 @@ export default function SellerOrdersDetails({ match: { params: { id } } }) {
         headers: { Authorization: token },
       })
       .then(() => {
-        if (e.target.value === 'Em Trânsito') {
+        if (e.target.value === ORDER_SENT) {
           setIsDisabled(true);
         }
       })
@@ -39,7 +39,6 @@ export default function SellerOrdersDetails({ match: { params: { id } } }) {
       });
   };
 
-  console.log('order :>> ', order);
   return (
     <div>
       <Navbar />
@@ -51,26 +50,28 @@ export default function SellerOrdersDetails({ match: { params: { id } } }) {
       <div>
         <h3>{`PEDIDO ${id}`}</h3>
         <h4 data-testid="seller_order_details__element-order-details-label-order-date">
-          {order.saleDate.slice(0, SLICEDATE)}
+          {order.saleDate.slice(0, SLICE_DATE)}
         </h4>
         <h5>{order.status}</h5>
         <button
           type="submit"
-          value="Preparando"
+          value={ PREPARING }
           data-testid="seller_order_details__button-preparing-check"
           placeholder="Preparar Pedido"
           onClick={ changeStatus }
-          disabled={ isDisabled }
+          disabled={
+            isDisabled || order.status === ORDER_SENT || order.status === PREPARING
+          }
         >
           Preparar Pedido
         </button>
         <button
           type="submit"
-          value="Em Trânsito"
+          value={ ORDER_SENT }
           data-testid="seller_order_details__button-dispatch-check"
           placeholder="Saiu para Entrega"
           onClick={ changeStatus }
-          disabled={ isDisabled }
+          disabled={ isDisabled || order.status === ORDER_SENT }
         >
           Saiu para Entrega
         </button>

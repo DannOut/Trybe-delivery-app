@@ -2,7 +2,6 @@ import React, { useContext, useState, useEffect } from 'react';
 import { string, number } from 'prop-types';
 import Context from '../context/Context';
 
-//  prettier-ignore
 function ProductsCard({ id, name, urlImage, price }) {
   const { order, setOrder } = useContext(Context);
 

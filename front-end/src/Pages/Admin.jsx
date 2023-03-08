@@ -40,7 +40,7 @@ export default function Admin() {
   return (
     <div>
       <Navbar />
-      <RegisterForm />
+      <RegisterForm getUser={ getUsers } />
 
       <h2> Lista de Usuário</h2>
       <table>

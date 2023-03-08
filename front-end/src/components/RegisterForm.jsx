@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import api from '../Service/api';
 // import { useHistory } from 'react-router-dom';
 
-export default function RegisterForm() {
+export default function RegisterForm({ getUsers }) {
   // const history = useHistory();
   const [disabled, setDisabled] = useState(true);
   const [errMsg, setErrMsg] = useState('');
@@ -23,7 +24,7 @@ export default function RegisterForm() {
       password,
       role,
     };
-    console.log('data :>> ', data);
+    // console.log('data :>> ', data);
     try {
       await api.post(
         '/manage',
@@ -39,6 +40,7 @@ export default function RegisterForm() {
         setErrMsg(err.response.data.message);
       }
     }
+    getUsers();
   }
 
   function handleChange({ target }) {
@@ -132,3 +134,7 @@ export default function RegisterForm() {
     </section>
   );
 }
+
+RegisterForm.propTypes = {
+  getUsers: PropTypes.func.isRequired,
+};

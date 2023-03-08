@@ -1,0 +1,71 @@
+.menu {
+  align-items: center;
+  background-color: #c72828;
+  color: #ffb84d;
+  display: flex;
+  flex-wrap: wrap;
+  height: 7rem;
+  justify-content: space-between;
+  padding: 0 1rem;
+}
+
+.menu img {
+  width: 4rem;
+}
+
+.menu > div {
+  display: flex;
+  gap: 1rem;
+}
+
+.products {
+  align-items: center;
+  color: #ffb84d;
+  display: flex;
+  height: 7rem;
+  padding: 0 1rem;
+}
+
+.orders {
+  align-items: center;
+  background-color: #ffb84d;
+  color: #c72828;
+  display: flex;
+  height: 7rem;
+  height: inherit;
+  padding: 0 1rem;
+}
+
+.menu a {
+  font-weight: 800;
+  letter-spacing: 0.01rem;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+
+.menu nav {
+  display: flex;
+  gap: 1rem;
+}
+
+.menu nav button {
+  background-color: #ffb84d;
+  border: none;
+  border-radius: 2px;
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  height: 2rem;
+  width: 7rem;
+}
+
+.menu nav > div {
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  height: 2rem;
+  letter-spacing: 0.01rem;
+  line-height: 2rem;
+  width: 7rem;
+}

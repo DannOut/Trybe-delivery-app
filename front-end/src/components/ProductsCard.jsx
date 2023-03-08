@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { string, number } from 'prop-types';
 import Context from '../context/Context';
-import styles from './ProductsCard.module.css';
+import styles from '../css/ProductsCard.module.css';
 
 function ProductsCard({ id, name, urlImage, price }) {
   const { order, setOrder } = useContext(Context);

@@ -21,7 +21,6 @@ export default function CustomerOrders() {
   return (
     <div>
       <Navbar />
-      {console.log(orders)}
       {orders.map(({ id, totalPrice, status, saleDate }) => (
         <Link to={ `/customer/orders/${id}` } key={ id }>
           <div data-testid={ `customer_orders__element-order-id-${id}` }>

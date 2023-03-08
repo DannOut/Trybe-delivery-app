@@ -10,7 +10,7 @@ function Provider({ children }) {
     role: '',
   });
   const [message, setMessage] = useState('');
-
+  const [status, setStatus] = useState('');
   const [order, setOrder] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
 
@@ -24,6 +24,8 @@ function Provider({ children }) {
       setOrder,
       totalPrice,
       setTotalPrice,
+      status,
+      setStatus,
     }),
     [
       form,
@@ -34,6 +36,8 @@ function Provider({ children }) {
       setOrder,
       totalPrice,
       setTotalPrice,
+      status,
+      setStatus,
     ],
   );
   return <Context.Provider value={ value }>{children}</Context.Provider>;

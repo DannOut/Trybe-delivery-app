@@ -34,7 +34,7 @@ export default function CustomerOrders() {
           </div>
           <div>
             <p data-testid={ `customer_orders__element-order-date-${id}` }>
-              {new Date(saleDate).toLocaleDateString()}
+              {new Date(saleDate).toLocaleDateString('pt-BR')}
             </p>
             <p data-testid={ `customer_orders__element-card-price-${id}` }>
               {totalPrice.replace('.', ',')}

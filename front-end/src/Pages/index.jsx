@@ -7,6 +7,7 @@ import CustomerOrders from './CustomerOrders';
 import CustomerOrderDetail from './CustomerOrderDetail';
 import SellerOrders from './SellerOrders';
 import SellerOrdersDetails from './SellerOrdersDetails';
+import Admin from './Admin';
 
 export {
   Login,
@@ -18,4 +19,5 @@ export {
   CheckoutClient,
   CustomerOrderDetail,
   CustomerOrders,
+  Admin,
 };

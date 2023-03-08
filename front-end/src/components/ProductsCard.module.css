@@ -1,0 +1,79 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #f0efe5;
+}
+
+.content {
+  align-items: center;
+  background: #ffb84d;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  font-size: 1rem;
+  height: 15rem;
+  margin-bottom: 1rem;
+  overflow: hidden;
+  width: 12rem;
+}
+
+.infoProducts {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  font-size: 0.875rem;
+  gap: 0.5rem;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.infoProducts p {
+  margin: 0;
+}
+
+.content .thumbnail {
+  background: white;
+  overflow: hidden;
+  width: 12rem;
+}
+
+.price {
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.01rem;
+}
+
+.qtd {
+  align-items: center;
+  background: #e6e5e5;
+  border-radius: 4px;
+  display: flex;
+  gap: 2px;
+  justify-content: center;
+  padding: 4px;
+}
+
+.qtd button {
+  background-color: #e6e5e5;
+  border: none;
+  cursor: pointer;
+}
+
+.qtd input {
+  background-color: #e6e5e5;
+  border: none;
+  margin: 0 auto;
+  outline: none;
+  width: 2rem;
+
+}
+
+.content img {
+  height: 100px;
+  object-fit: contain;
+  width: 100%;
+}

@@ -1,36 +1,38 @@
 import React, { useEffect, useState } from 'react';
-import api from '../Service/api';
-// import { useHistory } from 'react-router-dom';
-import CheckoutProductsCard from '../components/CheckoutProductsCard';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
 import Navbar from '../components/Navbar';
 
 export default function CustomerOrderDetail() {
-  const [sales, setSales] = useState([]);
-  const [products, setProducts] = useState([]);
-  console.log(products);
+  const [saleById, setSaleById] = useState([]);
+  // const [products, setProducts] = useState([]);
+  const { id } = useParams();
+
+  const { token, name } = JSON.parse(localStorage.getItem('user')) || '';
   useEffect(() => {
     // declare the data fetching function
-
-    const { token } = JSON.parse(localStorage.getItem('user')) || '';
-    api.get('/sales', {
-      headers: { Authorization: token },
-    }).then((response) => {
-      setSales(response.data.sales);
-      console.log(response.data.sales);
-    })
-      .catch((erro) => {
-        console.log(erro);
-      });
-    api.get('/products', {
-      headers: { Authorization: token },
-    }).then((response) => {
-      setProducts(response.data);
-      console.log(response.data);
-    })
-      .catch((erro) => {
-        console.log(erro);
-      });
-  }, []);
+    const getSaleById = async () => {
+      const result = await axios
+        .get(`http://localhost:3001/sales/${id}`, {
+          headers: {
+            Authorization: token,
+          },
+        })
+        .then((response) => response)
+        .catch((response) => response);
+      setSaleById(result.data);
+    };
+    getSaleById();
+    // api.get('/products', {
+    //   headers: { Authorization: token },
+    // }).then((response) => {
+    //   setProducts(response.data);
+    //   console.log(response.data);
+    // })
+    //   .catch((erro) => {
+    //     console.log(erro);
+    //   });
+  }, [id]);
 
   return (
     <div>
@@ -38,21 +40,19 @@ export default function CustomerOrderDetail() {
       {/* linha co dados do pedido */}
       <span>Detalhes do Pedido</span>
       <div>
-        <span>Pedido</span>
-        <span>Nome</span>
-        <span>Data</span>
-        <span>Status</span>
-        <button type="button">Status de entrega</button>
+        <span>
+          Pedido
+          {' '}
+          {saleById.id}
+        </span>
+        <span>{name}</span>
+        <span>{saleById.saleDate}</span>
+        <span>{saleById.status}</span>
+        <button type="button">Marcar como Entregue</button>
       </div>
-      {sales.map(({ id, totalPrice, status, saleDate }) => (
-        <CheckoutProductsCard
-          key={ id }
-          id={ id }
-          totalPrice={ totalPrice }
-          status={ status }
-          saleDate={ saleDate }
-        />
-      ))}
+      {/* {saleById.products.map((sale) => (
+        <div key={ sale.id } />
+      ))} */}
     </div>
   );
 }

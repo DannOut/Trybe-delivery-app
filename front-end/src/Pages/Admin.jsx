@@ -40,7 +40,7 @@ export default function Admin() {
   return (
     <div>
       <Navbar />
-      <RegisterForm getUser={ getUsers } />
+      <RegisterForm getUsers={ getUsers } />
 
       <h2> Lista de Usuário</h2>
       <table>
@@ -73,7 +73,7 @@ export default function Admin() {
                   <button
                     type="button"
                     data-testid={
-                      `admin_manage__element-user-table-name-${ind}`
+                      `admin_manage__element-user-table-remove-${ind}`
                     }
                     value={ id }
                     onClick={ deleteHandler }

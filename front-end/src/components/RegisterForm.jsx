@@ -1,30 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import api from '../Service/api';
+import Context from '../context/Context';
 // import { useHistory } from 'react-router-dom';
 
 export default function RegisterForm({ getUsers }) {
   // const history = useHistory();
   const [disabled, setDisabled] = useState(true);
-  const [errMsg, setErrMsg] = useState('');
-  const [formRegister, setFormRegister] = useState({
-    name: '',
-    email: '',
-    password: '',
-    role: 'seller',
-  });
+  const { form, setForm, message, setMessage } = useContext(Context);
   const { token } = JSON.parse(localStorage.getItem('user')) || '';
 
   async function handleSubmitNewRegister(event) {
     event.preventDefault();
-    const { name, email, password, role } = formRegister;
+    const { name, email, password, role } = form;
     const data = {
       name,
       email,
       password,
       role,
     };
-    // console.log('data :>> ', data);
+
     try {
       await api.post(
         '/manage',
@@ -35,9 +30,9 @@ export default function RegisterForm({ getUsers }) {
       );
     } catch (err) {
       if (!err?.response) {
-        setErrMsg('No Server Response');
+        setMessage('No Server Response');
       } else {
-        setErrMsg(err.response.data.message);
+        setMessage(err.response.data.message);
       }
     }
     getUsers();
@@ -45,7 +40,7 @@ export default function RegisterForm({ getUsers }) {
 
   function handleChange({ target }) {
     const { name, value } = target;
-    setFormRegister({ ...formRegister, [name]: value });
+    setForm({ ...form, [name]: value });
   }
 
   useEffect(() => {
@@ -53,7 +48,7 @@ export default function RegisterForm({ getUsers }) {
     const MIN_CARACTERE_PASS = 6;
     const validateEmail = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/gi;
 
-    const { name, email, password, role } = formRegister;
+    const { name, email, password, role } = form;
     if (
       name.length >= MIN_CARACTERE_NAME
       && password.length >= MIN_CARACTERE_PASS
@@ -62,7 +57,7 @@ export default function RegisterForm({ getUsers }) {
     ) {
       setDisabled(false);
     }
-  }, [formRegister]);
+  }, [form]);
 
   return (
     <section>
@@ -77,7 +72,7 @@ export default function RegisterForm({ getUsers }) {
             type="text"
             id="name"
             name="name"
-            value={ formRegister.name }
+            value={ form.name }
             onChange={ handleChange }
             placeholder="Seu nome"
             data-testid="admin_manage__input-name"
@@ -111,7 +106,7 @@ export default function RegisterForm({ getUsers }) {
             name="role"
             id="role"
             data-testid="admin_manage__select-role"
-            value={ formRegister.role }
+            value={ form.role }
             onChange={ handleChange }
           >
             <option value="seller">Vendedor</option>
@@ -129,7 +124,7 @@ export default function RegisterForm({ getUsers }) {
         </button>
       </form>
       <span data-testid="admin_manage__element-invalid-register">
-        {errMsg}
+        {message}
       </span>
     </section>
   );

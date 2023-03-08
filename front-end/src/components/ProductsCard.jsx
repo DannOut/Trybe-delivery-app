@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { string, number } from 'prop-types';
 import Context from '../context/Context';
+import styles from './ProductsCard.module.css';
 
 function ProductsCard({ id, name, urlImage, price }) {
   const { order, setOrder } = useContext(Context);
@@ -35,19 +36,23 @@ function ProductsCard({ id, name, urlImage, price }) {
   };
 
   return (
-    <section data-testid="products">
-      <p data-testid={ `customer_products__element-card-price-${id}` }>
-        R$
-        {price.replace('.', ',')}
-      </p>
-      <img
-        src={ urlImage }
-        alt={ name }
-        height="100px"
-        data-testid={ `customer_products__img-card-bg-image-${id}` }
-      />
-      <p data-testid={ `customer_products__element-card-title-${id}` }>{name}</p>
-      <section>
+    <section className={ styles.content } data-testid="products">
+
+      <div className={ styles.thumbnail }>
+        <img
+          src={ urlImage }
+          alt={ name }
+          data-testid={ `customer_products__img-card-bg-image-${id}` }
+        />
+      </div>
+      <div className={ styles.infoProducts }>
+        <p data-testid={ `customer_products__element-card-price-${id}` }>
+          R$
+          {price.replace('.', ',')}
+        </p>
+        <p data-testid={ `customer_products__element-card-title-${id}` }>{name}</p>
+      </div>
+      <section className={ styles.qtd }>
         <button
           data-testid={ `customer_products__button-card-rm-item-${id}` }
           type="button"

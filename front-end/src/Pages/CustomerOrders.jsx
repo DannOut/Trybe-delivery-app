@@ -12,17 +12,18 @@ export default function CustomerOrders() {
       headers: { Authorization: token },
     }).then((response) => {
       setOrders(response.data.sales);
-      // console.log(response.data.sales);
     })
       .catch((erro) => {
         console.log(erro);
       });
   }, []);
+
   return (
     <div>
       <Navbar />
+      {console.log(orders)}
       {orders.map(({ id, totalPrice, status, saleDate }) => (
-        <Link to="/customer/orders/:id" key={ id }>
+        <Link to={ `/customer/orders/${id}` } key={ id }>
           <div data-testid={ `customer_orders__element-order-id-${id}` }>
             Pedido
             {' '}
@@ -33,16 +34,10 @@ export default function CustomerOrders() {
           </div>
           <div>
             <p data-testid={ `customer_orders__element-order-date-${id}` }>
-              {new Date(saleDate).getDate()}
-              /
-              {new Date(saleDate).getMonth() + 1}
-              /
-              {new Date(saleDate).getFullYear()}
+              {new Date(saleDate).toLocaleDateString('pt-BR')}
             </p>
             <p data-testid={ `customer_orders__element-card-price-${id}` }>
-              R$
-              {' '}
-              {totalPrice}
+              {totalPrice.replace('.', ',')}
             </p>
           </div>
         </Link>

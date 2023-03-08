@@ -15,6 +15,8 @@ module.exports = {
           model: "users",
           key: "id",
         },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
       seller_id: {
         type: Sequelize.INTEGER,
@@ -23,6 +25,8 @@ module.exports = {
           model: "users",
           key: "id",
         },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
       total_price: {
         type: Sequelize.DECIMAL(9, 2),

@@ -17,6 +17,13 @@ export default function Login() {
   const NOTFOUND = 404;
 
   useEffect(() => {
+    const { role } = JSON.parse(localStorage.getItem('user')) || '';
+    if (role !== undefined) {
+      redirectBasedInRole(role);
+    }
+  }, []);
+
+  useEffect(() => {
     const validateEmail = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/gi;
     const minPassword = 6;
     if (validateEmail.test(form.email) && form.password.length >= minPassword) {

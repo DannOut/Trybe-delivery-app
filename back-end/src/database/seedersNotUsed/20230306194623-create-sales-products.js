@@ -1,5 +1,4 @@
 "use strict";
-
 module.exports = {
   async up(queryInterface, _Sequelize) {
     await queryInterface.bulkInsert(
@@ -28,4 +27,3 @@ module.exports = {
     await queryInterface.bulkDelete("sales_products", null, {});
   },
 };
-

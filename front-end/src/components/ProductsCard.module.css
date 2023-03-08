@@ -1,11 +1,11 @@
 * {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
 }
 
 body {
-  background-color: #f0efe5 ;
+  background-color: #f0efe5;
 }
 
 .content {
@@ -39,7 +39,7 @@ body {
   background: white;
   overflow: hidden;
   width: 12rem;
-} 
+}
 
 .price {
   font-size: 1rem;

@@ -20,7 +20,7 @@ export default function Navbar() {
           className={ styles.products }
           data-testid="customer_products__element-navbar-link-products"
         >
-          Products
+          Produtos
         </a>
         <a
           href="#asd"

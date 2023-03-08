@@ -46,7 +46,10 @@ function ProductsCard({ id, name, urlImage, price }) {
         />
       </div>
       <div className={ styles.infoProducts }>
-        <p data-testid={ `customer_products__element-card-price-${id}` }>
+        <p
+          className={ styles.price }
+          data-testid={ `customer_products__element-card-price-${id}` }
+        >
           R$
           {price.replace('.', ',')}
         </p>

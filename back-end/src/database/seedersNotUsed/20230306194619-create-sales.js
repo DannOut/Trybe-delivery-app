@@ -1,5 +1,4 @@
 "use strict";
-
 module.exports = {
   async up(queryInterface, _Sequelize) {
     await queryInterface.bulkInsert(
@@ -12,7 +11,7 @@ module.exports = {
           total_price: 62.73,
           delivery_address: "rua grupo 21",
           delivery_number: "123",
-          sale_date:  new Date('2011-08-01T19:58:00.000Z'),
+          sale_date: new Date("2011-08-01T19:58:00.000Z"),
           status: "Pendente",
         },
       ],
@@ -23,4 +22,3 @@ module.exports = {
     await queryInterface.bulkDelete("sales", null, {});
   },
 };
-

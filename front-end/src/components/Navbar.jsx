@@ -1,6 +1,6 @@
 import React from 'react';
 import { useHistory, NavLink } from 'react-router-dom';
-import styles from './Navbar.module.css';
+import styles from '../css/Navbar.module.css';
 import Logo from '../images/Logo.svg';
 
 export default function Navbar() {

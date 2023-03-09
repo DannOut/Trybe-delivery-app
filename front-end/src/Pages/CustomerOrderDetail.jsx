@@ -7,7 +7,8 @@ import styles from './CustomerOrderDetail.module.css';
 export default function CustomerOrderDetail() {
   const { id } = useParams();
   const [detailsProducts, setDetailsProducts] = useState({ products: [] });
-
+  const [btnStatusCheck, setBtnStatusCheck] = useState(false);
+  const [status, setStatus] = useState('');
   const { token } = JSON.parse(localStorage.getItem('user')) || '';
 
   const dateFormatter = new Date(detailsProducts.saleDate).toLocaleDateString('pt-BR');
@@ -18,13 +19,29 @@ export default function CustomerOrderDetail() {
       headers: {
         Authorization: token,
       },
-    }).then((response) => setDetailsProducts(response.data));
+    }).then((response) => {
+      setDetailsProducts(response.data);
+      setStatus(response.data.status);
+    });
   }, [id, token]);
 
+  useEffect(() => {
+    const checkStatus = detailsProducts.status === 'Pendente';
+    setBtnStatusCheck(!checkStatus);
+  }, [detailsProducts]);
+
   function handleDeliveryStatus() {
-
+    api.patch(`/sales/${id}`, { status: 'Entregue' }, {
+      headers: {
+        Authorization: token,
+      },
+    });
+    setStatus('Entregue');
+    setBtnStatusCheck(true);
   }
-
+  console.log(detailsProducts);
+  console.log(products);
+  console.log(btnStatusCheck);
   return (
     <div>
       <Navbar />
@@ -52,14 +69,15 @@ export default function CustomerOrderDetail() {
             { dateFormatter }
           </p>
           <p
-            data-testid="customer_order_details__
-            element-order-details-label-delivery-status<index>"
+            data-testid={ `customer_order_details__
+            element-order-details-label-delivery-status${detailsProducts.id}` }
           >
-            { detailsProducts.status }
+            { status }
           </p>
           <button
             type="submit"
             onClick={ handleDeliveryStatus }
+            disabled={ btnStatusCheck }
             data-testid="customer_order_details__button-delivery-check"
           >
             MARCAR COMO ENTREGUE

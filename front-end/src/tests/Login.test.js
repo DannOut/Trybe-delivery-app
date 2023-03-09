@@ -1,5 +1,6 @@
 /* eslint-disable import/named */
 import React from 'react';
+// import axios from 'axios';
 import { screen, fireEvent, render } from '@testing-library/react';
 import { Router } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
@@ -9,12 +10,16 @@ import App from '../App';
 import renderWithRouter from '../utils/RenderWithRouter';
 import mockToken from './mocks/User.mock';
 import Redirect from '../Pages/RedirectToLogin';
+// import productsMock from './mocks/Products.mock';
+
+jest.mock('axios');
 
 const COMMON_LOGIN_INPUT_EMAIL = 'common_login__input-email';
 const COMMON_LOGIN_INPUT_PASSWORD = 'common_login__input-password';
 const COMMON_LOGIN_BUTTON_LOGIN = 'common_login__button-login';
 const COMMON_LOGIN_BUTTON_REGISTER = 'common_login__button-register';
 const email2 = 'zebirita@email.com';
+const password2 = '$#zebirita#$';
 
 describe('Testando a página de Login', () => {
   it('01- Desativa o botão de login quando o e-mail for inválido', () => {
@@ -67,7 +72,7 @@ describe('Testando a página de Login', () => {
 
     expect(loginButton).toHaveProperty('disabled', true);
     userEvent.type(email, email2);
-    userEvent.type(password, '$#zebirita#$');
+    userEvent.type(password, password2);
     localStorage.setItem('user', mockToken);
 
     userEvent.click(loginButton);
@@ -93,12 +98,16 @@ describe('Testando a página de Login', () => {
   //   const password = screen.getByTestId(COMMON_LOGIN_INPUT_PASSWORD);
   //   const loginButton = screen.getByTestId(COMMON_LOGIN_BUTTON_LOGIN);
 
-  //   localStorage.setItem('user', JSON.stringify(mockToken));
-  //   userEvent.type(email, 'zebirita@email.com');
-  //   userEvent.type(password, '$#zebirita#$');
+  //   axios.post.mockImplementation(() => Promise.resolve({ data: mockToken }));
+  //   userEvent.type(email, email2);
+  //   userEvent.type(password, password2);
 
-  //   userEvent.click(loginButton);
-  //   history.push('/customer/products');
+  //   fireEvent.click(loginButton);
+  //   const mockedPost = jest.spyOn(axios, 'post')
+  //     .mockImplementation(() => Promise.resolve({ data: mockToken }));
+  //   expect(mockedPost).toBeCalledWith('http://localhost:3001/login', { email: 'zebirita@email.com', password: '$#zebirita#$' });
+
+  //   expect(mockedPost).toHaveBeenCalled();
 
   //   expect(history.location.pathname).toBe('/customer/products');
   //   expect(screen.getByText(/cliente zé birita/i)).toBeInTheDocument();

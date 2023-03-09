@@ -17,8 +17,9 @@ export default function Login() {
   const NOTFOUND = 404;
 
   useEffect(() => {
-    const token = JSON.parse(localStorage.getItem('user'));
-    if (token && token.role !== undefined) {
+    const result = localStorage.getItem('user');
+    if (result) {
+      const token = JSON.parse(result);
       redirectBasedInRole(token.role);
     }
   }, []);

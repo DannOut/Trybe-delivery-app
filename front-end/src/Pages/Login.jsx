@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { act } from 'react-dom/test-utils';
 import Context from '../context/Context';
 import { redirectBasedInRole } from '../utils/Helpers';
-import { act } from 'react-dom/test-utils';
 
 export default function Login() {
   const {

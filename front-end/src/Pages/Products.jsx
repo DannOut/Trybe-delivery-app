@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import ProductsCard from '../components/ProductsCard';
 import Context from '../context/Context';
-import styles from './Products.module.css';
+import styles from '../css/Products.module.css';
 
 export default function Products() {
   const [products, setProducts] = useState([]);

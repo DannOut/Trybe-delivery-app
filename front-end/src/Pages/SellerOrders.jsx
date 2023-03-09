@@ -32,11 +32,7 @@ export default function SellerOrders() {
           </div>
           <div>
             <p data-testid={ `seller_orders__element-order-date-${id}` }>
-              {new Date(saleDate).getDate()}
-              /
-              {new Date(saleDate).getMonth() + 1}
-              /
-              {new Date(saleDate).getFullYear()}
+              {new Date(saleDate).toLocaleDateString('pt-BR')}
             </p>
             <p data-testid={ `seller_orders__element-card-address-${id}` }>
               { deliveryAdress }

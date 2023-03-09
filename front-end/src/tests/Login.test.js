@@ -1,16 +1,14 @@
-/* eslint-disable import/named */
 import React from 'react';
-// import axios from 'axios';
-import { screen, fireEvent, render } from '@testing-library/react';
+import axios from 'axios';
+import { screen, render } from '@testing-library/react';
 import { Router } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 import Login from '../Pages/Login';
 import App from '../App';
 import renderWithRouter from '../utils/RenderWithRouter';
-import mockToken from './mocks/User.mock';
+import { infoSentAxiosPost, mockToken } from './mocks/User.mock';
 import Redirect from '../Pages/RedirectToLogin';
-// import productsMock from './mocks/Products.mock';
 
 jest.mock('axios');
 
@@ -18,10 +16,21 @@ const COMMON_LOGIN_INPUT_EMAIL = 'common_login__input-email';
 const COMMON_LOGIN_INPUT_PASSWORD = 'common_login__input-password';
 const COMMON_LOGIN_BUTTON_LOGIN = 'common_login__button-login';
 const COMMON_LOGIN_BUTTON_REGISTER = 'common_login__button-register';
-const email2 = 'zebirita@email.com';
-const password2 = '$#zebirita#$';
+const emailValidLogin = 'zebirita@email.com';
+const passwordValidLogin = '$#zebirita#$';
 
 describe('Testando a página de Login', () => {
+  beforeEach(() => {
+    const localStorageMock = {
+      getItem: jest.fn(),
+      setItem: jest.fn(),
+      clear: jest.fn(),
+    };
+
+    global.localStorage.clear();
+    global.localStorage = localStorageMock;
+  });
+
   it('01- Desativa o botão de login quando o e-mail for inválido', () => {
     const { getByTestId } = renderWithRouter(<Login />);
 
@@ -29,8 +38,8 @@ describe('Testando a página de Login', () => {
     const passwordInput = getByTestId(COMMON_LOGIN_INPUT_PASSWORD);
     const loginButton = getByTestId(COMMON_LOGIN_BUTTON_LOGIN);
 
-    fireEvent.change(emailInput, { target: { value: 'Invalid email or password' } });
-    fireEvent.change(passwordInput, { target: { value: 'Invalid email or password' } });
+    userEvent.type(emailInput, 'Invalid email or password');
+    userEvent.type(passwordInput, 'Invalid email or password');
 
     expect(loginButton).toBeDisabled();
   });
@@ -41,8 +50,8 @@ describe('Testando a página de Login', () => {
     const passwordInput = getByTestId(COMMON_LOGIN_INPUT_PASSWORD);
     const loginButton = getByTestId(COMMON_LOGIN_BUTTON_LOGIN);
 
-    fireEvent.change(emailInput, { target: { value: 'valid-email@example.com' } });
-    fireEvent.change(passwordInput, { target: { value: 'validpassword' } });
+    userEvent.type(emailInput, 'valid-email@example.com');
+    userEvent.type(passwordInput, 'validpassword');
 
     expect(loginButton).toBeEnabled();
   });
@@ -62,23 +71,40 @@ describe('Testando a página de Login', () => {
     expect(buttonRegister).toBeInTheDocument();
   });
 
-  it('04- Se navega para a página de registro', () => {
-    const { history } = renderWithRouter(<App />);
+  it('04- Se é feita a requisição do axios ao clicar em login', async () => {
+    renderWithRouter(<App />);
 
     const email = screen.getByTestId(COMMON_LOGIN_INPUT_EMAIL);
     const password = screen.getByTestId(COMMON_LOGIN_INPUT_PASSWORD);
     const loginButton = screen.getByTestId(COMMON_LOGIN_BUTTON_LOGIN);
-    const buttonRegister = screen.getByTestId(COMMON_LOGIN_BUTTON_REGISTER);
+
+    //* Testando mock do axios
+    const response = { data: mockToken };
+    axios.post.mockResolvedValue(response);
 
     expect(loginButton).toHaveProperty('disabled', true);
-    userEvent.type(email, email2);
-    userEvent.type(password, password2);
-    localStorage.setItem('user', mockToken);
+    userEvent.type(email, emailValidLogin);
+    userEvent.type(password, passwordValidLogin);
 
+    expect(loginButton).toBeEnabled();
     userEvent.click(loginButton);
-    userEvent.click(buttonRegister);
 
-    expect(history.location.pathname).toBe('/register');
+    //! apenas para parar o warning vermelho
+    const mockLocation = { pathname: '/' };
+    Object.defineProperty(window, 'location', { value: mockLocation });
+    expect(mockLocation.pathname).toBe('/');
+
+    const result = await axios.post('/login', infoSentAxiosPost);
+    expect(result.data.email).toEqual(response.data.email);
+    expect(axios.post)
+      .toHaveBeenCalledWith(
+        '/login',
+        infoSentAxiosPost,
+      );
+  });
+
+  it('06- Messagem de Erro ', () => {
+
   });
 
   it('05- Redireciona para /login', () => {

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Context from '../context/Context';
 import { redirectBasedInRole } from '../utils/Helpers';
+import { act } from 'react-dom/test-utils';
 
 export default function Login() {
   const {
@@ -48,9 +49,11 @@ export default function Login() {
     if (result.status !== NOTFOUND) {
       localStorage.setItem('user', JSON.stringify(result.data));
       redirectBasedInRole(result.data.role);
-      setForm({
-        ...form,
-        password: '',
+      act(() => {
+        setForm({
+          ...form,
+          password: '',
+        });
       });
     } else {
       setMessage('Invalid email or password');

@@ -7,9 +7,10 @@ import styles from './CustomerOrderDetail.module.css';
 export default function CustomerOrderDetail() {
   const { id } = useParams();
   const [detailsProducts, setDetailsProducts] = useState({ products: [] });
-  const [btnStatusCheck, setBtnStatusCheck] = useState(false);
+  const [isDisabled, setisDisabled] = useState(true);
   const [status, setStatus] = useState('');
   const { token } = JSON.parse(localStorage.getItem('user')) || '';
+  const BASE_DATA_ID = 'customer_order_details__element';
 
   const dateFormatter = new Date(detailsProducts.saleDate).toLocaleDateString('pt-BR');
   const { products } = detailsProducts;
@@ -21,13 +22,21 @@ export default function CustomerOrderDetail() {
       },
     }).then((response) => {
       setDetailsProducts(response.data);
+
       setStatus(response.data.status);
     });
   }, [id, token]);
 
+  const calculateTotalPrice = (array) => array
+    .reduce((acc, { product, quantity }) => {
+      const val = product.price * quantity;
+      acc += val;
+      return acc;
+    }, 0).toFixed(2);
+
   useEffect(() => {
-    const checkStatus = detailsProducts.status === 'Pendente';
-    setBtnStatusCheck(!checkStatus);
+    const checkStatus = detailsProducts.status === 'Em Trânsito';
+    setisDisabled(!checkStatus);
   }, [detailsProducts]);
 
   function handleDeliveryStatus() {
@@ -37,54 +46,52 @@ export default function CustomerOrderDetail() {
       },
     });
     setStatus('Entregue');
-    setBtnStatusCheck(true);
+    setisDisabled(true);
   }
-  console.log(detailsProducts);
-  console.log(products);
-  console.log(btnStatusCheck);
+  // console.log(detailsProducts);
+  // console.log(products);
+  // console.log(btnStatusCheck);
   return (
-    <div>
+    <div
+      className={ styles.content }
+      data-testid={ `${BASE_DATA_ID}-order-details-label-order-id` }
+    >
       <Navbar />
       <h1>Detalhe do Pedido</h1>
-      <section className={ styles.content }>
-        <div className={ styles.headerOrders }>
-          <p>
-            <strong
-              data-testid="customer_order_details__element-order-details-label-order-id"
-            >
-              PEDIDO 0003:
-            </strong>
-            P. Vend:
-            <span
-              data-testid="customer_order_details__
-              element-order-details-label-seller-name"
-            >
-              Fulana Pereira
-            </span>
-          </p>
-          <p
-            data-testid="Group customer_order_details__
-            element-order-details-label-order-date"
-          >
-            { dateFormatter }
-          </p>
-          <p
-            data-testid={ `customer_order_details__
-            element-order-details-label-delivery-status${detailsProducts.id}` }
-          >
-            { status }
-          </p>
-          <button
-            type="submit"
-            onClick={ handleDeliveryStatus }
-            disabled={ btnStatusCheck }
-            data-testid="customer_order_details__button-delivery-check"
-          >
-            MARCAR COMO ENTREGUE
-          </button>
-        </div>
 
-        <table>
+      <div className={ styles.headerOrders }>
+        <strong>
+          {`PEDIDO ${id}`}
+        </strong>
+        P. Vend:
+        <span
+          data-testid="customer_order_details__element-order-details-label-seller-name"
+        >
+          { detailsProducts.sellerName }
+        </span>
+        <p
+          data-testid="customer_order_details__element-order-details-label-order-date"
+        >
+          { dateFormatter }
+        </p>
+        <p
+          data-testid={
+            `${BASE_DATA_ID}-order-details-label-delivery-status${detailsProducts.id}`
+          }
+        >
+          { status }
+        </p>
+        <button
+          type="submit"
+          onClick={ handleDeliveryStatus }
+          disabled={ isDisabled }
+          data-testid="customer_order_details__button-delivery-check"
+        >
+          MARCAR COMO ENTREGUE
+        </button>
+      </div>
+      <table>
+        <thead>
           <tr>
             <th scope="col">Item</th>
             <th scope="col">Descrição</th>
@@ -92,44 +99,46 @@ export default function CustomerOrderDetail() {
             <th scope="col">Valor Unitário</th>
             <th scope="col">Sub-total</th>
           </tr>
-          { products.map(({ product, quantity }, index) => (
-            <tr key={ product.id }>
+        </thead>
+        { products.map(({ product, quantity }, index) => (
+          <tbody key={ product.id }>
+            <tr>
               <td
-                data-testid={ `customer_order_details__
-                element-order-table-item-number-${index}` }
+                data-testid={ `${BASE_DATA_ID}-order-table-item-number-${index}` }
               >
                 {index + 1}
               </td>
               <td
-                data-testid={ `customer_order_details__
-                element-order-table-name-${index}` }
+                data-testid={ `${BASE_DATA_ID}-order-table-name-${index}` }
               >
                 {product.name}
               </td>
               <td
-                data-testid={ `customer_order_details__
-                element-order-table-quantity-${index}` }
+                data-testid={ `${BASE_DATA_ID}-order-table-quantity-${index}` }
               >
                 {quantity}
               </td>
               <td
-                data-testid={ `customer_order_details__
-                element-order-table-unit-price-${index}` }
+                data-testid={ `${BASE_DATA_ID}-order-table-unit-price-${index}` }
               >
                 R$
                 {product.price}
               </td>
               <td
-                data-testid={ `customer_order_details__
-                element-order-table-sub-total-${index}` }
+                data-testid={ `${BASE_DATA_ID}-order-table-sub-total-${index}` }
               >
                 R$
                 {Number(product.price * quantity).toFixed(2)}
               </td>
             </tr>
-          ))}
-        </table>
-      </section>
+          </tbody>
+        ))}
+      </table>
+      <div
+        data-testid={ `${BASE_DATA_ID}-order-total-price` }
+      >
+        { calculateTotalPrice(products).replace('.', ',') || 0 }
+      </div>
     </div>
   );
 }

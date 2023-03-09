@@ -35,6 +35,10 @@ export default function SellerOrdersDetails({ match: { params: { id } } }) {
       setPreparingOrder(true);
       setSentDelivery(false);
     }
+    if (status === 'Entregue') {
+      setPreparingOrder(true);
+      setSentDelivery(true);
+    }
   }, [status]);
 
   const changeStatus = async (e) => {

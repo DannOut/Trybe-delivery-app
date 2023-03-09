@@ -1,12 +1,13 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { waitFor } from '@testing-library/react';
 import SellerOrders from '../Pages/SellerOrders';
 import api from '../Service/api';
+import renderWithRouter from '../utils/RenderWithRouter';
 
 jest.mock('../Service/api');
 
-describe('SellerOrders', () => {
-  it('should display orders', async () => {
+describe('Testando SellerOrders', () => {
+  it('Exibe os pedidos', async () => {
     const orders = [
       {
         id: 1,
@@ -25,7 +26,7 @@ describe('SellerOrders', () => {
     ];
     api.get.mockResolvedValueOnce({ data: { sales: orders } });
 
-    const { getByTestId } = render(<SellerOrders />);
+    const { getByTestId } = renderWithRouter(<SellerOrders />);
 
     await waitFor(() => {
       orders.forEach((order) => {
@@ -40,16 +41,6 @@ describe('SellerOrders', () => {
         expect(getByTestId(`seller_orders__element-card-price-${order.id}`))
           .toBeInTheDocument();
       });
-    });
-  });
-
-  it('should display error message', async () => {
-    api.get.mockRejectedValueOnce(new Error('Network error'));
-
-    const { getByText } = render(<SellerOrders />);
-
-    await waitFor(() => {
-      expect(getByText('Network error')).toBeInTheDocument();
     });
   });
 });

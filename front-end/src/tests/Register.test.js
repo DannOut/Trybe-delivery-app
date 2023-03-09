@@ -31,25 +31,4 @@ describe('Testando a página de Registro', () => {
     const pageTitle = screen.getByRole('heading', { name: /cadastro/i });
     expect(pageTitle).toBeInTheDocument();
   });
-
-  // it('disables the register button when name, email or password are invalid', () => {
-  //   render(<Register />, { wrapper: MemoryRouter });
-  //   const registerButton = screen.getByTestId(COMMON_REGISTER_BUTTON_REGISTER);
-  //   expect(registerButton).toBeDisabled();
-
-  //   fireEvent.change(screen.getByTestId(COMMON_REGISTER_INPUT_NAME), {
-  //     target: { value: 'Zé Birita' },
-  //   });
-  //   expect(registerButton).toBeDisabled();
-
-  //   fireEvent.change(screen.getByTestId(COMMON_REGISTER_INPUT_EMAIL), {
-  //     target: { value: 'zebirita@email.com' },
-  //   });
-  //   expect(registerButton).toBeDisabled();
-
-  //   fireEvent.change(screen.getByTestId(COMMON_REGISTER_INPUT_PASSWORD), {
-  //     target: { value: 'password' },
-  //   });
-  //   expect(registerButton).toBeEnabled();
-  // });
 });

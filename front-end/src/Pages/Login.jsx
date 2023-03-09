@@ -18,10 +18,10 @@ export default function Login() {
   const NOTFOUND = 404;
 
   useEffect(() => {
-    const result = localStorage.getItem('user');
-    if (result) {
-      const token = JSON.parse(result);
-      redirectBasedInRole(token.role);
+    const localStorageData = localStorage.getItem('user');
+    if (localStorageData) {
+      const data = JSON.parse(localStorageData);
+      redirectBasedInRole(data.role);
     }
   }, []);
 

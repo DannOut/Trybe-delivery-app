@@ -1,0 +1,17 @@
+.content {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  height: 70rem;
+  justify-content: flex-start;
+  width: 70rem;
+}
+
+.headerOrders {
+  display: flex;
+  gap: 2rem;
+}
+
+.headerOrders > p strong {
+  margin-right: 1rem;
+}

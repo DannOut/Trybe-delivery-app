@@ -25,8 +25,22 @@ const getAllSellers = async (token) => {
   return allUsers;
 };
 
+const checkSellerName = async (id) => {
+    const checkSale = await Sale.findOne({
+    where: { id },
+    include: [
+      {
+        model: User,
+        as: 'seller',
+        attributes: ['name'],
+      },
+    ],
+  });
+  return checkSale;
+};
+
 const getSaleById = async (id) => {
-  const checkSale = await Sale.findByPk(id);
+  const checkSale = await checkSellerName(id);
   if (!checkSale) throw new ErrorClass(404, 'Sale not found!');
   const products = await SaleProduct.findAll({
     where: { saleId: id },
@@ -36,10 +50,11 @@ const getSaleById = async (id) => {
         model: Product,
         as: 'product',
         attributes: ['id', 'name', 'price', 'urlImage'],
-      }],
+      },
+    ],
   });
-  const { totalPrice, sellerId, saleDate, status } = checkSale;
-  return { products, totalPrice, sellerId, saleDate, status, id: checkSale.id };
+  const { totalPrice, sellerId, saleDate, status, seller: { name } } = checkSale;
+  return { products, totalPrice, sellerId, saleDate, status, id: checkSale.id, sellerName: name };
 };
 
 const changeStatus = async (id, token, newStatus) => {

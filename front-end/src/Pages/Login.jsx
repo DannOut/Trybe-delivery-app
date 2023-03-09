@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { act } from 'react-dom/test-utils';
 import Context from '../context/Context';
 import { redirectBasedInRole } from '../utils/Helpers';
 
@@ -48,9 +49,11 @@ export default function Login() {
     if (result.status !== NOTFOUND) {
       localStorage.setItem('user', JSON.stringify(result.data));
       redirectBasedInRole(result.data.role);
-      setForm({
-        ...form,
-        password: '',
+      act(() => {
+        setForm({
+          ...form,
+          password: '',
+        });
       });
     } else {
       setMessage('Invalid email or password');

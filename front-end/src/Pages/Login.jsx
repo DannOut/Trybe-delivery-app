@@ -1,9 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
 import { act } from 'react-dom/test-utils';
 import Context from '../context/Context';
-import { redirectBasedInRole } from '../utils/Helpers';
 
 export default function Login() {
   const {
@@ -13,9 +12,23 @@ export default function Login() {
     setMessage,
   } = useContext(Context);
   const [disabled, setDisabled] = useState(true);
-
+  const history = useHistory();
   const baseURL = 'http://localhost:3001/login';
   const NOTFOUND = 404;
+
+  const redirectBasedInRole = (role) => {
+    if (role === 'customer') {
+      history.push('/customer/products');
+      return;
+    }
+    if (role === 'seller') {
+      history.push('/seller/orders');
+      return;
+    }
+    if (role === 'administrator') {
+      history.push('/admin/manage');
+    }
+  };
 
   useEffect(() => {
     const localStorageData = localStorage.getItem('user');
@@ -48,13 +61,13 @@ export default function Login() {
       .then((response) => response).catch(({ response }) => response);
     if (result.status !== NOTFOUND) {
       localStorage.setItem('user', JSON.stringify(result.data));
-      redirectBasedInRole(result.data.role);
       act(() => {
         setForm({
           ...form,
           password: '',
         });
       });
+      redirectBasedInRole(result.data.role);
     } else {
       setMessage('Invalid email or password');
     }

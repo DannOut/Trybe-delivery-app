@@ -1,3 +1,4 @@
+import { act } from '@testing-library/react';
 import axios from 'axios';
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
@@ -32,7 +33,10 @@ export default function Products() {
   const getTotalOrderValue = async () => {
     const total = await order
       .reduce((acc, curr) => acc + parseFloat(curr.price), 0);
-    setTotalPrice(total.toFixed(2).replace('.', ','));
+    act(() => {
+      /* fire events that update state */
+      setTotalPrice(total.toFixed(2).replace('.', ','));
+    });
   };
   getTotalOrderValue();
 
@@ -60,7 +64,6 @@ export default function Products() {
             urlImage={ urlImage }
             name={ name }
             price={ price }
-            // quantity={ 0 }
           />
         ))}
       </div>

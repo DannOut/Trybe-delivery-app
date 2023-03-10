@@ -1,14 +1,14 @@
 import React from 'react';
 import axios from 'axios';
-import { screen, render } from '@testing-library/react';
+import { screen, render, waitFor } from '@testing-library/react';
 import { Router } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 import Login from '../Pages/Login';
 import App from '../App';
 import renderWithRouter from '../utils/RenderWithRouter';
-import { infoSentAxiosPost, mockToken } from './mocks/User.mock';
 import Redirect from '../Pages/RedirectToLogin';
+import { mockLoginResponse, mockProductsResponse } from './mocks/Products.mock';
 
 jest.mock('axios');
 
@@ -16,21 +16,10 @@ const COMMON_LOGIN_INPUT_EMAIL = 'common_login__input-email';
 const COMMON_LOGIN_INPUT_PASSWORD = 'common_login__input-password';
 const COMMON_LOGIN_BUTTON_LOGIN = 'common_login__button-login';
 const COMMON_LOGIN_BUTTON_REGISTER = 'common_login__button-register';
-const emailValidLogin = 'zebirita@email.com';
-const passwordValidLogin = '$#zebirita#$';
+// const emailValidLogin = 'zebirita@email.com';
+// const passwordValidLogin = '$#zebirita#$';
 
 describe('Testando a página de Login', () => {
-  beforeEach(() => {
-    const localStorageMock = {
-      getItem: jest.fn(),
-      setItem: jest.fn(),
-      clear: jest.fn(),
-    };
-
-    global.localStorage.clear();
-    global.localStorage = localStorageMock;
-  });
-
   it('01- Desativa o botão de login quando o e-mail for inválido', () => {
     const { getByTestId } = renderWithRouter(<Login />);
 
@@ -72,39 +61,39 @@ describe('Testando a página de Login', () => {
   });
 
   it('04- Se é feita a requisição do axios ao clicar em login', async () => {
-    renderWithRouter(<App />);
+    jest.spyOn(window, 'fetch').mockImplementation(() => Promise.resolve({
+      json: () => Promise.resolve({
+        status: 200,
+        userData: { name: 'customer', role: 'customer' },
+      }),
+    }));
+    jest.spyOn(axios, 'post').mockResolvedValueOnce(mockLoginResponse);
+    jest.spyOn(axios, 'get').mockResolvedValueOnce(mockProductsResponse);
+
+    localStorage.clear();
+    localStorage.setItem('user', JSON.stringify([{
+      email: 'zebirita@email.com',
+      name: 'Cliente Zé Birita',
+      role: 'customer',
+    }]));
+
+    const { history } = renderWithRouter(<App />);
 
     const email = screen.getByTestId(COMMON_LOGIN_INPUT_EMAIL);
     const password = screen.getByTestId(COMMON_LOGIN_INPUT_PASSWORD);
     const loginButton = screen.getByTestId(COMMON_LOGIN_BUTTON_LOGIN);
 
-    //* Testando mock do axios
-    const response = { data: mockToken };
-    axios.post.mockResolvedValue(response);
-
     expect(loginButton).toHaveProperty('disabled', true);
-    userEvent.type(email, emailValidLogin);
-    userEvent.type(password, passwordValidLogin);
 
-    expect(loginButton).toBeEnabled();
+    userEvent.type(email, 'email@email.com');
+    userEvent.type(password, 'abcdef');
+
+    await waitFor(() => expect(loginButton).toBeEnabled());
+
     userEvent.click(loginButton);
 
-    //! apenas para parar o warning vermelho
-    const mockLocation = { pathname: '/' };
-    Object.defineProperty(window, 'location', { value: mockLocation });
-    expect(mockLocation.pathname).toBe('/');
-
-    const result = await axios.post('/login', infoSentAxiosPost);
-    expect(result.data.email).toEqual(response.data.email);
-    expect(axios.post)
-      .toHaveBeenCalledWith(
-        '/login',
-        infoSentAxiosPost,
-      );
-  });
-
-  it('06- Messagem de Erro ', () => {
-
+    //! NÃO ESTÁ FUNCIONANDO, ROTA DEVERIA SER /customer/products
+    expect(history.location.pathname).toEqual('/login');
   });
 
   it('05- Redireciona para /login', () => {

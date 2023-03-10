@@ -1,80 +1,78 @@
 /* eslint-disable react/jsx-no-constructed-context-values */
 /* eslint-disable no-shadow */
 import React from 'react';
-import { screen, fireEvent } from '@testing-library/react';
-import Context from '../context/Context';
-import ProductsCard from '../components/ProductsCard';
+import axios from 'axios';
+// import sinon from 'sinon';
+import userEvent from '@testing-library/user-event';
+import { screen, waitFor } from '@testing-library/react';
 import renderWithRouter from '../utils/RenderWithRouter';
+import App from '../App';
+import { mockLoginResponse, mockProductsResponse } from './mocks/Products.mock';
+import { checkoutMockRequestSeller } from './mocks/checkout.mock';
 
-const TREE = 3;
+const COMMON_LOGIN_INPUT_EMAIL = 'common_login__input-email';
+const COMMON_LOGIN_INPUT_PASSWORD = 'common_login__input-password';
+const COMMON_LOGIN_BUTTON_LOGIN = 'common_login__button-login';
 
 describe('Teste do componente ProductsCard', () => {
-  const contextValue = {
-    order: [],
-    setOrder: jest.fn(),
-  };
+  beforeEach(async () => {
+    jest.spyOn(axios, 'post').mockResolvedValueOnce(mockLoginResponse);
+    jest.spyOn(axios, 'get').mockResolvedValueOnce(mockProductsResponse);
+    jest.spyOn(axios, 'get').mockResolvedValueOnce(checkoutMockRequestSeller);
 
-  const product = {
-    id: 1,
-    name: 'Skol Lata 250ml',
-    urlImage: 'http://localhost:3001/images/skol_lata_350ml.jpg',
-    price: '2.2',
-  };
+    renderWithRouter(<App />);
 
-  it('01- Verifica se o componente é renderizado corretamente', () => {
-    renderWithRouter(
-      <Context.Provider value={ contextValue }>
-        <ProductsCard { ...product } />
-      </Context.Provider>,
-    );
+    const emailInput = screen.getByTestId(COMMON_LOGIN_INPUT_EMAIL);
+    userEvent.type(emailInput, 'email@email.com');
+    const passwordInput = screen.getByTestId(COMMON_LOGIN_INPUT_PASSWORD);
+    userEvent.type(passwordInput, 'abcdef');
+    const loginBtn = screen.getByTestId(COMMON_LOGIN_BUTTON_LOGIN);
+    userEvent.click(loginBtn);
 
-    const productTitle = screen
-      .getByTestId(`customer_products__element-card-title-${product.id}`);
-    expect(productTitle).toBeInTheDocument();
-
-    const productImage = screen
-      .getByTestId(`customer_products__img-card-bg-image-${product.id}`);
-    expect(productImage).toBeInTheDocument();
-
-    const productPrice = screen
-      .getByTestId(`customer_products__element-card-price-${product.id}`);
-    expect(productPrice).toBeInTheDocument();
-
-    const productQuantity = screen
-      .getByTestId(`customer_products__input-card-quantity-${product.id}`);
-    expect(productQuantity).toBeInTheDocument();
-
-    const productButtonAdd = screen
-      .getByTestId(`customer_products__button-card-add-item-${product.id}`);
-    expect(productButtonAdd).toBeInTheDocument();
-
-    const productButtonRemove = screen
-      .getByTestId(`customer_products__button-card-rm-item-${product.id}`);
-    expect(productButtonRemove).toBeInTheDocument();
+    await waitFor(() => expect(loginBtn).toBeEnabled());
+    userEvent.click(loginBtn);
   });
 
-  it('02- Verifica se o componente atualiza a quantidade de itens corretamente', () => {
-    const contextValue = {
-      order: [{ id: 1,
-        name: 'Skol Lata 250ml',
-        urlImage: 'http://localhost:3001/images/skol_lata_350ml.jpg',
-        price: '2.2' }],
-      setOrder: jest.fn(),
-    };
+  test('All Products are listed', async () => {
+    const itemDescriptionNumber3 = screen
+      .getByTestId('customer_products__element-card-title-3');
+    expect(itemDescriptionNumber3.textContent).toBe('Antarctica Pilsen 300ml');
 
-    renderWithRouter(
-      <Context.Provider value={ contextValue }>
-        <ProductsCard { ...product } />
-      </Context.Provider>,
+    const incrementeValueItem3 = screen.getByTestId(
+      'customer_products__button-card-add-item-3',
+    );
+    const incrementeValueItem2 = screen.getByTestId(
+      'customer_products__button-card-add-item-2',
+    );
+    userEvent.click(incrementeValueItem3);
+    userEvent.click(incrementeValueItem3);
+    userEvent.click(incrementeValueItem2);
+
+    const totalValue = screen.getByTestId('customer_products__button-cart');
+    await waitFor(async () => expect(totalValue.textContent)
+      .toBe('Valor total: 12,48'));
+
+    const decrementValue = screen.getByTestId(
+      'customer_products__button-card-rm-item-3',
     );
 
-    const productQuantity = screen
-      .getByTestId(`customer_products__input-card-quantity-${product.id}`);
-    expect(productQuantity).toHaveValue(1);
+    userEvent.click(decrementValue);
+    await waitFor(async () => expect(totalValue.textContent).toBe('Valor total: 9,99'));
 
-    fireEvent.change(productQuantity, { target: { value: '3' } });
-    expect(productQuantity).toHaveValue(TREE);
+    userEvent.click(totalValue);
 
-    expect(contextValue.setOrder).toHaveBeenCalledTimes(1);
+    const removeBtn = screen.getByTestId(
+      'customer_checkout__element-order-table-remove-0',
+    );
+    expect(removeBtn).toBeEnabled();
+    const checkoutTotalPrice = screen
+      .getByTestId('customer_checkout__element-order-total-price');
+    await waitFor(async () => expect(checkoutTotalPrice.textContent)
+      .toBe('Total: R$ 9,99'));
+
+    userEvent.click(removeBtn);
+
+    await waitFor(async () => expect(checkoutTotalPrice.textContent)
+      .toBe('Total: R$ 2,49'));
   });
 });

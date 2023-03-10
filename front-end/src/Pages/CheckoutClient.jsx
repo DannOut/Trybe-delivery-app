@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
+import { act } from '@testing-library/react';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import Navbar from '../components/Navbar';
@@ -39,7 +40,9 @@ export default function CheckoutClient() {
         })
         .then((response) => response)
         .catch((response) => response);
-      setSellers(result.data);
+      act(() => {
+        setSellers(result.data);
+      });
     };
     allSellers();
   }, []);

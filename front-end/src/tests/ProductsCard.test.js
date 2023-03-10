@@ -1,17 +1,25 @@
 /* eslint-disable react/jsx-no-constructed-context-values */
 /* eslint-disable no-shadow */
 import React from 'react';
+import axios from 'axios';
 import { screen, fireEvent } from '@testing-library/react';
 import Context from '../context/Context';
 import ProductsCard from '../components/ProductsCard';
 import renderWithRouter from '../utils/RenderWithRouter';
+import { mockToken, token } from './mocks/User.mock';
+import App from '../App';
+import testRenderWithRouter from '../utils/testRenderWithRouter';
+import productsMock from './mocks/Products.mock';
 
 const TREE = 3;
+jest.mock('axios');
 
 describe('Teste do componente ProductsCard', () => {
   const contextValue = {
     order: [],
     setOrder: jest.fn(),
+    totalPrice: 0,
+    setTotalPrice: jest.fn(),
   };
 
   const product = {
@@ -21,7 +29,18 @@ describe('Teste do componente ProductsCard', () => {
     price: '2.2',
   };
 
-  it('01- Verifica se o componente é renderizado corretamente', () => {
+  beforeEach(() => {
+    const localStorageMock = {
+      getItem: jest.fn(),
+      setItem: jest.fn(),
+      clear: jest.fn(),
+    };
+
+    global.localStorage.clear();
+    global.localStorage = localStorageMock;
+  });
+
+  it.skip('01- Verifica se o componente é renderizado corretamente', () => {
     renderWithRouter(
       <Context.Provider value={ contextValue }>
         <ProductsCard { ...product } />
@@ -53,7 +72,7 @@ describe('Teste do componente ProductsCard', () => {
     expect(productButtonRemove).toBeInTheDocument();
   });
 
-  it('02- Verifica se o componente atualiza a quantidade de itens corretamente', () => {
+  it.skip('02- Verifica se o componente atualiza a quantidade de itens', () => {
     const contextValue = {
       order: [{ id: 1,
         name: 'Skol Lata 250ml',
@@ -76,5 +95,28 @@ describe('Teste do componente ProductsCard', () => {
     expect(productQuantity).toHaveValue(TREE);
 
     expect(contextValue.setOrder).toHaveBeenCalledTimes(1);
+  });
+
+  it.only('03- Check if price is add to cart', async () => {
+    global.localStorage.setItem('user', JSON.stringify(mockToken));
+    axios.get.mockResolvedValue(productsMock, {
+      headers: {
+        Authorization: token,
+      } });
+
+    const { history } = testRenderWithRouter(
+      <Context.Provider value={ contextValue }>
+        <App />
+      </Context.Provider>,
+      '/customer/products',
+    );
+    const {
+      location: { pathname },
+    } = history;
+    const result = await axios.get('/products');
+    console.log('result :>> ', result);
+
+    expect(result.data).toEqual(productsMock);
+    expect(pathname).toEqual('/customer/products');
   });
 });

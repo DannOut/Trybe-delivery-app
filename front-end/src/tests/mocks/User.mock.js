@@ -22,4 +22,4 @@ const infoSentAxiosPost = {
   token,
 };
 
-export { infoSentAxiosPost, mockToken };
+export { infoSentAxiosPost, mockToken, token };

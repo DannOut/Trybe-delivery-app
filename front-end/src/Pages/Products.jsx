@@ -60,7 +60,6 @@ export default function Products() {
             urlImage={ urlImage }
             name={ name }
             price={ price }
-            // quantity={ 0 }
           />
         ))}
       </div>

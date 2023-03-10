@@ -7,7 +7,7 @@ chai.use(chaiHttp);
 
 describe('Testando ErrorClass', () => {
   describe('Constructor', () => {
-    it('Cria uma instância de ErrorClass com as propriedades corretas', () => {
+    it('01- Cria uma instância de ErrorClass com as propriedades corretas', () => {
       const statusCode = 404;
       const message = 'Not found';
       const error = new ErrorClass(statusCode, message);
@@ -19,7 +19,7 @@ describe('Testando ErrorClass', () => {
       expect(error.message).to.equal(message);
     });
 
-    it('Chama o construtor com o argumento de mensagem', () => {
+    it('02- Chama o construtor com o argumento de mensagem', () => {
       const statusCode = 404;
       const message = 'Not found';
       const error = new ErrorClass(statusCode, message);
@@ -28,7 +28,7 @@ describe('Testando ErrorClass', () => {
       expect(error.message).to.equal(message);
     });
 
-    it('Defini o prototype para ErrorClass', () => {
+    it('03- Defini o prototype para ErrorClass', () => {
       const statusCode = 404;
       const message = 'Not found';
       const error = new ErrorClass(statusCode, message);

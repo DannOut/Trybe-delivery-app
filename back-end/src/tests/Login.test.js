@@ -20,7 +20,7 @@ chai.use(chaiHttp);
 
 describe("Testando a rota Login", () => {
 
-  it("Lança erro se não encontra um usuário", async () => {
+  it("01- Lança erro se não encontra um usuário", async () => {
     sinon.stub(User, "findOne").resolves(undefined);
     const response = await chai.request(app).post('/login').send(mockFalseLogin);
 
@@ -28,7 +28,7 @@ describe("Testando a rota Login", () => {
     expect(response.body).to.be.deep.eq({message:'Email or password are invalid'});
   })
 
-  it("Testa se recebe erro com senha incorreta", async () => {
+  it("02- Testa se recebe erro com senha incorreta", async () => {
     sinon.stub(User, "findOne").resolves(responseLogin);
 
     const response = await chai.request(app).post('/login').send(passwordLoginFailed);
@@ -37,7 +37,7 @@ describe("Testando a rota Login", () => {
     expect(response.body).to.be.deep.eq({message:'Email or password are invalid'});
   });
 
-  it('Retorna a mensagem de erro com o status 400', () => {
+  it('03- Retorna a mensagem de erro com o status 400', () => {
     const error = new ErrorClass(400, 'Some error message');
     const req = {};
     const res = {
@@ -52,7 +52,7 @@ describe("Testando a rota Login", () => {
     expect(res.json.calledWith({ message: 'Some error message' })).to.be.true;
   });
 
-  it('Retorna uma mensagem de erro 401', () => {
+  it('04- Retorna uma mensagem de erro 401', () => {
     const error = new JsonWebTokenError('Invalid token');
     const req = {};
     const res = {
@@ -67,7 +67,7 @@ describe("Testando a rota Login", () => {
     expect(res.json.calledWith({ message: 'Token must be a valid token' })).to.be.true;
   });
 
-  it('Retorna uma mensagem de erro 500', () => {
+  it('05- Retorna uma mensagem de erro 500', () => {
     const error = new Error('Some other error');
     const req = {};
     const res = {
@@ -82,7 +82,7 @@ describe("Testando a rota Login", () => {
     expect(res.json.calledWith({ message: 'Some other error' })).to.be.true;
   });
 
-  it('Lança um erro caso o token não seja encontrado', () => {
+  it('06- Lança um erro caso o token não seja encontrado', () => {
     const req = { headers: {} };
     const res = {};
     const next = sinon.spy();
@@ -100,7 +100,7 @@ describe("Testando a rota Login", () => {
   //   expect(next.calledOnce).to.be.true;
   // });
 
-  it('Gera um erro caso o token seja inválido', () => {
+  it('07- Gera um erro caso o token seja inválido', () => {
     const token = 'invalid-token';
     expect(() => tokenFunctions.decodeToken(token)).to.throw(ErrorClass, 'Token must be a valid token');
   });

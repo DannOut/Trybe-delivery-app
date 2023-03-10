@@ -89,16 +89,6 @@ describe("Testando a rota Login", () => {
     expect(() => tokenFunctions.verifyToken(req, res, next)).to.throw(ErrorClass, 'Token not found');
     expect(next.called).to.be.false;
   });
-  
-  // it('Chama a próxima função caso o token seja válido', () => {
-  //   const payload = { id: 1, name: 'Zé Birita' };
-  //   const token = jwt.sign(payload, process.env.JWT_SECRET || 'test');
-  //   const req = { headers: { authorization: token } };
-  //   const res = {};
-  //   const next = sinon.spy();
-  //   tokenFunctions.verifyToken(req, res, next);
-  //   expect(next.calledOnce).to.be.true;
-  // });
 
   it('07- Gera um erro caso o token seja inválido', () => {
     const token = 'invalid-token';

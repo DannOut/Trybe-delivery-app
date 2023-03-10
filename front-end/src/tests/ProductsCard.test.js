@@ -31,8 +31,6 @@ describe('Teste do componente ProductsCard', () => {
 
     await waitFor(() => expect(loginBtn).toBeEnabled());
     userEvent.click(loginBtn);
-
-    // sinon.stub(window.location, 'assign');
   });
 
   test('All Products are listed', async () => {

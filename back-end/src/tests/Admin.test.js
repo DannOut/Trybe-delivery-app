@@ -16,17 +16,17 @@ const newUser = {
   password: '$#zebirita#$',
 };
 
-  describe('Testando Admin', () => {
-    
-    let sandbox;// sandbox é uma funcionalidade do Sinon
-    
-    beforeEach(() => {
-      sandbox = sinon.createSandbox();
-    });
+describe('Testando Admin', () => {
+  
+  let sandbox;// sandbox é uma funcionalidade do Sinon
+  
+  beforeEach(() => {
+    sandbox = sinon.createSandbox();
+  });
 
-    afterEach(() => {
-      sandbox.restore();
-    });
+  afterEach(() => {
+    sandbox.restore();
+  });
 
   it('01- Retorna todos os usuários, exceto administradores', async () => {
     const findAllStub = sinon.stub(User, 'findAll')

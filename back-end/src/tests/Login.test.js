@@ -3,12 +3,11 @@ const { expect } = require('chai');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const sinon = require('sinon');
-const jwt = require('jsonwebtoken');
 const app = require('../api/app');
 const errorHandler = require('../middlewares/ErrorHandler');
 const ErrorClass = require('../utils/ErrorClass');
 const { JsonWebTokenError } = require('jsonwebtoken');
-
+const { createToken } = require('../auth/jwtFunctions');
 const tokenFunctions = require('../auth/jwtFunctions');
 const {
   passwordLoginFailed,
@@ -19,7 +18,6 @@ const {
 chai.use(chaiHttp);
 
 describe("Testando a rota Login", () => {
-
   it("01- Lança erro se não encontra um usuário", async () => {
     sinon.stub(User, "findOne").resolves(undefined);
     const response = await chai.request(app).post('/login').send(mockFalseLogin);
@@ -94,8 +92,19 @@ describe("Testando a rota Login", () => {
     const token = 'invalid-token';
     expect(() => tokenFunctions.decodeToken(token)).to.throw(ErrorClass, 'Token must be a valid token');
   });
+
+  it('08- Cria um token', () => {
+    const user = { id: 1, email: 'zebirita@email.com' };
+    const token = createToken(user);
+    expect(token).to.be.a('string');
+  });
   
   afterEach(() => {
     sinon.restore()
   });
 });
+
+
+
+
+

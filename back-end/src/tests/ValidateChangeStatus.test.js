@@ -41,7 +41,7 @@ describe('Testando validateChangeStatus', () => {
     expect(() => validateStatus(req, res, next)).to.throw(ErrorClass, 'missing status field');
   });
 
-  it('Gera um erro se o valor do status for inválido', () => {
+  it('04- Gera um erro se o valor do status for inválido', () => {
     req.body.status = 'Invalid Status';
     expect(() => validateStatus(req, res, next)).to.throw(ErrorClass, 'invalid status value');
   });

@@ -44,4 +44,11 @@ describe('Testando o componente CheckoutProductsCard', () => {
     renderWithRouter(<CheckoutProductsCard />);
     expect(screen.getByRole('button', { name: 'Remover' })).toBeInTheDocument();
   });
+
+  it('Os textos estão presentes na tela', () => {
+    renderWithRouter(<CheckoutProductsCard />);
+
+    expect(screen.getByRole('button', { name: 'Remover' }))
+      .toHaveTextContent(/Remover/i);
+  });
 });

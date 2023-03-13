@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
+import { act } from '@testing-library/react';
 import { string, number } from 'prop-types';
 import Context from '../context/Context';
 import styles from '../css/ProductsCard.module.css';
@@ -10,10 +11,13 @@ function ProductsCard({ id, name, urlImage, price }) {
   const [quantity, setQuantity] = useState(0);
 
   useEffect(() => {
-    const quantityByProduct = order.filter(
-      (orderByProduct) => orderByProduct.id === id,
-    ).length;
-    setQuantity(quantityByProduct);
+    act(() => {
+      const quantityByProduct = order.filter(
+        (orderByProduct) => orderByProduct.id === id,
+      ).length;
+      setQuantity(quantityByProduct);
+      /* fire events that update state */
+    });
   }, [order, id]);
 
   const handleInput = ({ target: { value } }) => {

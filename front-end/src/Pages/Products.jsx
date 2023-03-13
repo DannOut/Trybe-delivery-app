@@ -15,6 +15,7 @@ export default function Products() {
 
   //  Axios request
   useEffect(() => {
+    /* fire events that update state */
     const axiosProductsRequest = async () => {
       const { token } = JSON.parse(localStorage.getItem('user')) || '';
       const result = await axios
@@ -25,7 +26,9 @@ export default function Products() {
         })
         .then((response) => response)
         .catch((response) => response);
-      setProducts(result.data);
+      act(() => {
+        setProducts(result.data);
+      });
     };
     axiosProductsRequest();
   }, []);

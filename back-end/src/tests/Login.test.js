@@ -3,12 +3,11 @@ const { expect } = require('chai');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const sinon = require('sinon');
-const jwt = require('jsonwebtoken');
 const app = require('../api/app');
 const errorHandler = require('../middlewares/ErrorHandler');
 const ErrorClass = require('../utils/ErrorClass');
 const { JsonWebTokenError } = require('jsonwebtoken');
-
+const { createToken } = require('../auth/jwtFunctions');
 const tokenFunctions = require('../auth/jwtFunctions');
 const {
   passwordLoginFailed,
@@ -19,7 +18,6 @@ const {
 chai.use(chaiHttp);
 
 describe("Testando a rota Login", () => {
-
   it("01- Lança erro se não encontra um usuário", async () => {
     sinon.stub(User, "findOne").resolves(undefined);
     const response = await chai.request(app).post('/login').send(mockFalseLogin);
@@ -89,23 +87,24 @@ describe("Testando a rota Login", () => {
     expect(() => tokenFunctions.verifyToken(req, res, next)).to.throw(ErrorClass, 'Token not found');
     expect(next.called).to.be.false;
   });
-  
-  // it('Chama a próxima função caso o token seja válido', () => {
-  //   const payload = { id: 1, name: 'Zé Birita' };
-  //   const token = jwt.sign(payload, process.env.JWT_SECRET || 'test');
-  //   const req = { headers: { authorization: token } };
-  //   const res = {};
-  //   const next = sinon.spy();
-  //   tokenFunctions.verifyToken(req, res, next);
-  //   expect(next.calledOnce).to.be.true;
-  // });
 
   it('07- Gera um erro caso o token seja inválido', () => {
     const token = 'invalid-token';
     expect(() => tokenFunctions.decodeToken(token)).to.throw(ErrorClass, 'Token must be a valid token');
+  });
+
+  it('08- Cria um token', () => {
+    const user = { id: 1, email: 'zebirita@email.com' };
+    const token = createToken(user);
+    expect(token).to.be.a('string');
   });
   
   afterEach(() => {
     sinon.restore()
   });
 });
+
+
+
+
+

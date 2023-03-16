@@ -4,14 +4,14 @@ import Navbar from '../components/Navbar';
 import RegisterForm from '../components/RegisterForm';
 
 export default function Admin() {
-  const { token } = JSON.parse(localStorage.getItem('user')) || '';
+  const localStorageData = JSON.parse(localStorage.getItem('user')) || '';
   const [allUsers, setAllUsers] = useState([]);
 
   const getUsers = async () => {
     const allRegisteredUsers = await api
       .get('/manage', {
         headers: {
-          Authorization: token,
+          Authorization: localStorageData.token,
         },
       })
       .then((response) => response)
@@ -28,7 +28,7 @@ export default function Admin() {
       await api
         .delete(`/manage/${id}`, {
           headers: {
-            Authorization: token,
+            Authorization: localStorageData.token,
           },
         });
       getUsers();
